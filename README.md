@@ -24,4 +24,7 @@
 - <a href="https://github.com/NMDRA">Github</a>
 
 - <a href="https://twitter.com/nimendra_">Twitter</a>
+https://img.shields.io/twitter/follow/nimendra_?logo=twitter&style=for-the-badge
 
+- <a href="https://reddit.com/u/Nimendra">Reddit</a>
+https://img.shields.io/reddit/user-karma/combined/Nimendra?logo=reddit&style=for-the-badge
