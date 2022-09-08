@@ -16,8 +16,8 @@
 
 
 ---
-> nimendra.bearblog.dev
-> gitlab.com/nimendra_
-> github.com/NMDRA
-> twitter.com/nimendra_
+ nimendra.bearblog.dev
+ gitlab.com/nimendra_
+ github.com/NMDRA
+ twitter.com/nimendra_
 
