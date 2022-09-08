@@ -17,8 +17,11 @@
 ![Desktop Preview](/preview.jpg "Desktop Preview")
 
 
-<a href="https://nimendra.bearblog.dev">Blog</a>
-<a href="https://gitlab.com/nimendra_">Gitlab</a>
-<a href="https://github.com/NMDRA">Github</a>
-<a href="https://twitter.com/nimendra_">Twitter</a>
+- <a href="https://nimendra.bearblog.dev">Blog</a>
+
+- <a href="https://gitlab.com/nimendra_">Gitlab</a>
+
+- <a href="https://github.com/NMDRA">Github</a>
+
+- <a href="https://twitter.com/nimendra_">Twitter</a>
 
