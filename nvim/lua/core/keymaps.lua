@@ -1,7 +1,7 @@
 ----------------------------------------------------------
 -- Define keymaps of Neovim and installed plugins.
 -----------------------------------------------------------
--- don'fuck with leader key using insert mode
+-- don't fuck with leader key using insert mode
 
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
@@ -36,7 +36,7 @@ map('n', '<up>', '<C-u>')             -- with neoscroll smooth scrolling
 map('n', '<down>', '<C-d>')           -- with neoscroll smooth scrolling
 
 -- Clear search highlighting with <leader> and c
-map('n', '<leader>c', ':nohl<CR>')
+map('n', '<leader>h', ':nohl<CR>')
 
 -- Change split orientation
 -- map('n', '<leader>tk', '<C-w>t<C-w>K') -- change vertical to horizontal
@@ -61,10 +61,6 @@ map('n', '<leader>q', ':qa!<CR>')
 -- Applications and Plugins shortcuts
 -----------------------------------------------------------
 
--- Terminal mappings
--- map('n', '<C-t>', ':Term<CR>', { noremap = true })  -- open
--- map('t', '<Esc>', '<C-\\><C-n>')                    -- exit
-
 -- NvimTree
 map('n', '<C-n>', ':NvimTreeToggle<CR>')           -- open/close
 
@@ -74,5 +70,4 @@ map('n', '<C-t>', ':FzfLua<CR>')               -- Telescope
 map('n', '<leader>a', ':set spell!<CR>') --spell checking
 map('n', '<leader>st', ':LspStop<CR>') -- LSP stop
 map('n', '<leader>n', ':bNext<CR>') -- next buffer
-
--- map('n', '<leader>h', ':0r /home/nimendra/.config/nvim/lua/core/myheader.txt<CR>')
+map('n', '<leader>cl', ':ColorizerToggle<CR>') --Show Color
