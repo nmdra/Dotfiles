@@ -74,7 +74,7 @@ export QT_IM_MODULE=ibus
 
 #}}}
 
-#alias #{{{
+# alias #{{{
 alias ls='exa --icons'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 alias lsa='exa --all --icons --long --reverse --sort=modified'
@@ -86,7 +86,7 @@ alias cpustat='auto-cpufreq --stats'
 alias pacsyu='sudo pacman -Syu'
 alias pacs='sudo pacman -S '
 alias pacr='sudo pacman -R '
-
+alias v ='nvim'
 #}}}
 
 #FZF{{{
@@ -101,8 +101,7 @@ export FZF_CTRL_T_COMMAND="fd |sed 's@^\./@@'"
 #}}}
 
 # Bookmark & betercd Script
-
-source "$HOME"/.local/bin/bmark.sh
+# source "$HOME"/.local/bin/bmark.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.config/.oh-my-zsh/custom/.p10k.zsh ]] || source ~/.config/.oh-my-zsh/custom/.p10k.zsh
