@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=sxiv -a
-MimeType=image/gif;
-Name=sxiv -a
-NoDisplay=true
-Terminal=true
-Type=Application

@@ -12,7 +12,7 @@ echo "package list created"
 rsync .bashrc ~/Documents/Dotfiles/bash
 rsync .bash_profile Documents/Dotfiles/bash
 rsync .xinitrc Documents/Dotfiles/other
-rsync -r .local/share/applications Documents/Dotfiles/other
+# rsync -r .local/share/applications Documents/Dotfiles/other
 rsync -r ~/.librewolf/75xa29zu.default-release/chrome ~/Documents/Dotfiles/other
 rsync .config/tmux/tmux.conf Documents/Dotfiles/tmux
 rsync -r .local/bin/*.sh Documents/Dotfiles/scripts
