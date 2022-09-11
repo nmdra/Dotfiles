@@ -28,7 +28,7 @@ require('plugins/other') --other configuration
 require('plugins/neoscroll') -- smooth scrolling plugins
 require('plugins/comment') --comment plugin
 require('plugins/toggleterm') -- Terminal
-require'colorizer'.setup()
+-- require'colorizer'.setup()
 
 -- Onedark theme config
 -- require('plugins/onedark')

@@ -39,8 +39,8 @@ map('n', '<down>', '<C-d>')           -- with neoscroll smooth scrolling
 map('n', '<leader>c', ':nohl<CR>')
 
 -- Change split orientation
-map('n', '<leader>tk', '<C-w>t<C-w>K') -- change vertical to horizontal
-map('n', '<leader>th', '<C-w>t<C-w>H') -- change horizontal to vertical
+-- map('n', '<leader>tk', '<C-w>t<C-w>K') -- change vertical to horizontal
+-- map('n', '<leader>th', '<C-w>t<C-w>H') -- change horizontal to vertical
 
 -- Move around splits using Ctrl + {h,j,k,l}
 map('n', '<C-h>', '<C-w>h')
@@ -52,9 +52,8 @@ map('n', '<C-l>', '<C-w>l')
 map('n', '<leader>r', ':so %<CR>')
 
 -- Fast saving with <leader> and s
-map('n', '<leader>s', ':w<CR>')
+-- map('n', '<leader>s', ':w<CR>')
 
---map('i', '<leader>s', '<C-c>:w<CR>')
 
 -- Close all windows and exit from Neovim with <leader> and q
 map('n', '<leader>q', ':qa!<CR>')
@@ -73,7 +72,7 @@ map('n', '<leader>f', ':FzfLua oldfiles<CR>')          -- Telescope find
 map('n', '<C-t>', ':FzfLua<CR>')               -- Telescope
 
 map('n', '<leader>a', ':set spell!<CR>') --spell checking
-map('n', '<leader>t', ':LspStop<CR>') -- LSP stop
+map('n', '<leader>st', ':LspStop<CR>') -- LSP stop
 map('n', '<leader>n', ':bNext<CR>') -- next buffer
 
 -- map('n', '<leader>h', ':0r /home/nimendra/.config/nvim/lua/core/myheader.txt<CR>')

@@ -38,14 +38,11 @@ return packer.startup(function(use)
   use 'lewis6991/impatient.nvim'
 
   -- colorschemes {{{
- --  dracula.nvim
   -- use 'Mofiqul/dracula.nvim'
-
   use 'navarasu/onedark.nvim'
-
   use 'folke/tokyonight.nvim'
-  use 'tiagovla/tokyodark.nvim'
-  use 'eddyekofo94/gruvbox-flat.nvim'
+  -- use 'tiagovla/tokyodark.nvim'
+  -- use 'eddyekofo94/gruvbox-flat.nvim'
   --}}}
 
   -- lsp stuff  {{{
@@ -130,7 +127,10 @@ return packer.startup(function(use)
   use 'ibhagwan/fzf-lua'
 
   -- Icons
-  use { 'kyazdani42/nvim-web-devicons', event = 'BufRead' }
+  use {
+    'kyazdani42/nvim-web-devicons',
+    event = 'BufRead'
+  }
 
   -- vim-tmux vim-tmux-navigator >> easy navigation vim & tmux panes
   use 'christoomey/vim-tmux-navigator'
@@ -160,11 +160,14 @@ return packer.startup(function(use)
     "akinsho/toggleterm.nvim",
     tag = 'v2.*',
     config = "require('plugins/toggleterm')"
-  } --}}}
+  }
 
-  use 'NvChad/nvim-colorizer.lua'
+  use {
+    'NvChad/nvim-colorizer.lua',
+    cmd = "ColorizerToggle",
+    config = "require'colorizer'.setup()"
+  }
 
-  -- Lua
   use {
     "folke/which-key.nvim",
     config = function()
@@ -175,6 +178,7 @@ return packer.startup(function(use)
       }
     end
   }
+--}}}
 
   -- Using Packer
   -- Automatically set up your configuration after cloning packer.nvim

@@ -75,6 +75,7 @@ gst-plugins-good
 gst-plugins-ugly
 gzip
 haveged
+hplip
 htop
 ibus-helakuru
 inetutils
@@ -222,6 +223,7 @@ pulseaudio-ctl
 pulseaudio-zeroconf
 pyright
 python-pip
+python-pyqt5
 qbittorrent
 qt5-imageformats
 qt5-virtualkeyboard
