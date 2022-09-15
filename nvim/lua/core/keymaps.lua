@@ -25,7 +25,6 @@ vim.g.mapleader = ' '
 -- map('', '<right>', '<nop>')
 
 -- insert mode mappings
-map('i', 'jj', '<Esc>') -- mapping for normal mode
 map('i', '<C-l>', '<right>') -- no arrow keys insert mode
 map('i', '<C-h>', '<left>')
 map('i', '<C-k>', '<up>')

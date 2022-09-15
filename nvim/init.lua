@@ -25,16 +25,17 @@ require('plugins/nvim-lspconfig') --LSP configuration
 require('plugins/fzf-lua') -- fzf plugin written in lua
 require('plugins/lualine') -- statusline config
 require('plugins/other') --other configuration
-require('plugins/neoscroll') -- smooth scrolling plugins
+require('plugins/neoscroll') -- smooth scrolling plugin
 require('plugins/comment') --comment plugin
 require('plugins/toggleterm') -- Terminal
--- require'colorizer'.setup()
 
--- Onedark theme config
+-- Themes
+
+-- Onedark
 -- require('plugins/onedark')
 -- require('onedark').load()
 
--- tokyonight Theme config
+-- tokyonight
 require('plugins/tokyonight')
 vim.cmd[[colorscheme tokyonight]]
 

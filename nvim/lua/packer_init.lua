@@ -38,11 +38,8 @@ return packer.startup(function(use)
   use 'lewis6991/impatient.nvim'
 
   -- colorschemes {{{
-  -- use 'Mofiqul/dracula.nvim'
   use 'navarasu/onedark.nvim'
   use 'folke/tokyonight.nvim'
-  -- use 'tiagovla/tokyodark.nvim'
-  -- use 'eddyekofo94/gruvbox-flat.nvim'
   --}}}
 
   -- lsp stuff  {{{
@@ -55,8 +52,6 @@ return packer.startup(function(use)
   -- lsp icons
   use 'onsails/lspkind-nvim'
 
-  -- use 'williamboman/nvim-lsp-installer'
-
   -- Autopair
   use {
     'windwp/nvim-autopairs',
@@ -64,13 +59,6 @@ return packer.startup(function(use)
       require('nvim-autopairs').setup()
     end
   }
-
-  -- use {
-  --   'jose-elias-alvarez/null-ls.nvim',
-  -- }
-  --
-  -- use 'nvim-lua/plenary.nvim'
-  --}}}
 
   -- Treesitter {{{
   use {
@@ -133,7 +121,29 @@ return packer.startup(function(use)
   }
 
   -- vim-tmux vim-tmux-navigator >> easy navigation vim & tmux panes
-  use 'christoomey/vim-tmux-navigator'
+  -- use 'christoomey/vim-tmux-navigator'
+  use({
+    "aserowy/tmux.nvim",
+    config = function()
+        require("tmux").setup({
+            -- overwrite default configuration
+            -- here, e.g. to enable default bindings
+            copy_sync = {
+                -- enables copy sync and overwrites all register actions to
+                -- sync registers *, +, unnamed, and 0 till 9 from tmux in advance
+                enable = true,
+            },
+            navigation = {
+                -- enables default keybindings (C-hjkl) for normal mode
+                enable_default_keybindings = true,
+            },
+            resize = {
+                -- enables default keybindings (A-hjkl) for normal mode
+                enable_default_keybindings = true,
+            }
+        })
+    end
+  })
 
   -- File explorer
   use {
@@ -178,7 +188,15 @@ return packer.startup(function(use)
       }
     end
   }
---}}}
+
+  use {
+    "max397574/better-escape.nvim",
+    config = function()
+      require("better_escape").setup()
+    end,
+  }
+
+  --}}}
 
   -- Using Packer
   -- Automatically set up your configuration after cloning packer.nvim

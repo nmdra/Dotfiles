@@ -64,6 +64,7 @@ gettext
 github-cli
 glibc
 glibc-locales
+glow
 grep
 grub
 grub-btrfs
@@ -108,7 +109,6 @@ ksystemlog
 kwallet-pam
 kwayland-integration
 kwin
-kwin-bismuth-bin
 kwrited
 latte-dock
 less

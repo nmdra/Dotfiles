@@ -53,7 +53,6 @@ if [ -n "${NVIM_LISTEN_ADDRESS+x}"]; then
     export MANPAGER="/usr/bin/nvim -c 'Man!' -o -"
 fi
 
-
 # export HISTFILE=$HOME/.local/state/.bash_history
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -86,7 +85,9 @@ alias cpustat='auto-cpufreq --stats'
 alias pacsyu='sudo pacman -Syu'
 alias pacs='sudo pacman -S '
 alias pacr='sudo pacman -R '
-alias v ='nvim'
+alias v='nvim'
+alias convpn='protonvpn-cli connect'
+alias disvpn='protonvpn-cli disconnect'
 #}}}
 
 #FZF{{{

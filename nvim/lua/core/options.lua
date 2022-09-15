@@ -67,8 +67,10 @@ opt.spelllang = { 'en','cjk' }
 -- Disable nvim intro
 opt.shortmess:append "sI"
 
+-- Filetype.lua
 g.do_filetype_lua = 1
 g.did_load_filetypes = 0
+
 -- Disable builtins plugins{{{
 local disabled_built_ins = {
   "netrw",
@@ -80,7 +82,7 @@ local disabled_built_ins = {
   "zipPlugin",
   "tar",
   "tarPlugin",
-  -- "tutor_mode_plugin",
+  "tutor_mode_plugin",
   "getscript",
   "getscriptPlugin",
   "vimball",
