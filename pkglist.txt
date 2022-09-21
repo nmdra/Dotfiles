@@ -61,6 +61,7 @@ fzf
 gawk
 gcc-libs
 gettext
+gimp
 github-cli
 glibc
 glibc-locales
@@ -79,6 +80,7 @@ haveged
 hplip
 htop
 ibus-helakuru
+img2pdf
 inetutils
 intel-ucode
 inxi

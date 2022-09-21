@@ -63,8 +63,8 @@ map('n', '<leader>q', ':qa!<CR>')
 -- NvimTree
 map('n', '<C-n>', ':NvimTreeToggle<CR>')           -- open/close
 
-map('n', '<leader>f', ':FzfLua oldfiles<CR>')          -- Telescope find
-map('n', '<C-t>', ':FzfLua<CR>')               -- Telescope
+map('n', '<leader>f', ':FzfLua oldfiles<CR>')          --Fzflua find
+map('n', '<C-t>', ':FzfLua<CR>')               -- Fzflua
 
 map('n', '<leader>a', ':set spell!<CR>') --spell checking
 map('n', '<leader>st', ':LspStop<CR>') -- LSP stop

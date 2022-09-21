@@ -101,9 +101,6 @@ export FZF_CTRL_T_COMMAND="fd |sed 's@^\./@@'"
 
 #}}}
 
-# Bookmark & betercd Script
-# source "$HOME"/.local/bin/bmark.sh
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.config/.oh-my-zsh/custom/.p10k.zsh ]] || source ~/.config/.oh-my-zsh/custom/.p10k.zsh
 

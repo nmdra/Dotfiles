@@ -59,6 +59,7 @@ return packer.startup(function(use)
       require('nvim-autopairs').setup()
     end
   }
+-- }}}
 
   -- Treesitter {{{
   use {
@@ -111,9 +112,10 @@ return packer.startup(function(use)
   -- nvim-lualine
   use 'nvim-lualine/lualine.nvim'
 
-  -- fzf-lua >> alternative to telescope
-  use 'ibhagwan/fzf-lua'
-
+  use { 'ibhagwan/fzf-lua',
+    -- optional for icon support
+    requires = { 'kyazdani42/nvim-web-devicons' }
+  }
   -- Icons
   use {
     'kyazdani42/nvim-web-devicons',
