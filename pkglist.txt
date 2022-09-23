@@ -111,6 +111,7 @@ ksystemlog
 kwallet-pam
 kwayland-integration
 kwin
+kwin-bismuth
 kwrited
 latte-dock
 less

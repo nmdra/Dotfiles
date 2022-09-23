@@ -93,6 +93,7 @@ local disabled_built_ins = {
   "remote_plugins",
   "spellfile_plugin",
   "matchit",
+  "fzf",
   "matchparen"
 }
 --}}}

@@ -16,5 +16,5 @@ super + shift + b
 super + shift + p
     playerctl play-pause
 
-super + f
+super + m
     alacritty -t File\ Manager -e tmux new-session -A -D -s Files "lfub.sh"
