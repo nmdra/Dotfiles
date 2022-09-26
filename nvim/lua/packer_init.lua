@@ -116,6 +116,9 @@ return packer.startup(function(use)
     -- optional for icon support
     requires = { 'kyazdani42/nvim-web-devicons' }
   }
+
+  use 'RRethy/vim-illuminate'
+
   -- Icons
   use {
     'kyazdani42/nvim-web-devicons',

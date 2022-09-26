@@ -241,6 +241,7 @@ sddm-breath-theme
 sddm-kcm
 sed
 shadow
+slop
 sof-firmware
 spectacle
 spectre-meltdown-checker
