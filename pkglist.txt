@@ -6,6 +6,7 @@ alacritty
 alsa-firmware
 alsa-utils
 appimagelauncher
+ark
 atool
 audacious
 auto-cpufreq
@@ -23,6 +24,7 @@ breeze-gtk
 btop
 btrfs-progs
 bzip2
+c-lolcat
 chaotic-keyring
 chaotic-mirrorlist
 cheese
@@ -152,7 +154,6 @@ manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
 manjaro-system
 manjaro-zsh-config
-matray
 mdadm
 mediainfo
 memtest86+
