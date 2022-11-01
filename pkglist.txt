@@ -42,6 +42,7 @@ dmraid
 dnsmasq
 dolphin
 dosfstools
+downgrade
 e2fsprogs
 ecryptfs-utils
 efibootmgr
@@ -156,6 +157,7 @@ manjaro-system
 manjaro-zsh-config
 mdadm
 mediainfo
+megasync
 memtest86+
 mesa-demos
 mhwd
@@ -177,6 +179,7 @@ networkmanager-openconnect
 networkmanager-openvpn
 networkmanager-pptp
 networkmanager-vpnc
+newsflash
 nfs-utils
 noisetorch-bin
 noto-fonts
@@ -231,6 +234,8 @@ python-pyqt5
 qbittorrent
 qt5-imageformats
 qt5-virtualkeyboard
+rclone
+rclone-browser
 reiserfsprogs
 rofi
 rsync

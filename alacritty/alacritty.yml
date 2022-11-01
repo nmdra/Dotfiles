@@ -17,7 +17,7 @@ window:
   #   x: 70
   #   y: 40
   padding:
-    x: 4
+    x: 2
     y: 0
   dynamic_padding: true
   decorations: full
