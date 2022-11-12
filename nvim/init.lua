@@ -1,17 +1,12 @@
 --[[
 Name: init.lua
-Catogary: Neovim Config
-Dependencies: Neovim
-Description:
 Contributors: nimendra
-Last Update: 2022-09-02 11:37
--------------------------------
-> gitlab.com/nimendra_
+Last Update: 2022-10-09 19:58
+-----------------------------
+> github.com/NMDRA
 > twitter.com/nimendra_
-===============================
+=============================
 --]]
-
--- Import Lua modules
 
 require('impatient') -- speedup neovim loading
 require'impatient'.enable_profile() -- impatient report enable
@@ -28,15 +23,16 @@ require('plugins/other') --other configuration
 require('plugins/neoscroll') -- smooth scrolling plugin
 require('plugins/comment') --comment plugin
 require('plugins/toggleterm') -- Terminal
+
 -- Themes
 
 -- Onedark
 -- require('plugins/onedark')
 -- require('onedark').load()
 
--- tokyonight
+-- Tokyonight
 require('plugins/tokyonight')
 vim.cmd[[colorscheme tokyonight]]
 
--- for neovide
+-- For Neovide
 vim.opt.guifont = { "JetBrainsMono Nerd Font", "h13" }

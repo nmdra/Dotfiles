@@ -15,7 +15,7 @@ indent_blankline.setup {
   char = "▏",
   use_treesitter = true,
   show_first_indent_level = true,
-  -- show_end_of_line = true,
+  show_end_of_line = true,
   space_char_blankline = " ",
   show_current_context = true,
   show_current_context_start = true,

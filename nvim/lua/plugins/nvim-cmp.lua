@@ -41,6 +41,7 @@ local kind_icons = {
   TypeParameter = "",
 }
 -- }}}
+
 cmp.setup {
   view = {
       entries = "custom" -- can be "custom", "wildmenu" or "native"

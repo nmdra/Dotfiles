@@ -18,16 +18,3 @@ require'lspconfig'.clangd.setup{
   capabilities = capabilities
 }
 --}}}
--- filetype.lua{{{
-vim.filetype.add({
-    -- extension = {
-    --     foo = "fooscript",
-    -- },
-    filename = {
-        ["lfrc"] = "sh",
-    },
---     pattern = {
---         ["~/%.config/foo/.*"] = "fooscript",
---     }
-})
---}}}

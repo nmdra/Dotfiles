@@ -20,8 +20,19 @@ end
 
 -- Diagnostic options, see: `:help vim.diagnostic.config`
 vim.diagnostic.config({ virtual_text = true })
-
 -- Diagnostics
+-- Diagnostic options, see: `:help vim.diagnostic.config`
+-- vim.diagnostic.config({
+--   update_in_insert = true,
+--   float = {
+--     focusable = false,
+--     style = "minimal",
+--     border = "rounded",
+--     source = "always",
+--     header = "",
+--     prefix = "",
+-- 	},
+-- })
 
 local signs = {Error = " ", Warn = " ", Hint = " ", Info = " "}
 
@@ -38,7 +49,7 @@ vim.cmd([[
 -- Add additional capabilities supported by nvim-cmp
 -- See: https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 capabilities.textDocument.completion.completionItem.documentationFormat = { 'markdown', 'plaintext' }
 capabilities.textDocument.completion.completionItem.snippetSupport = true

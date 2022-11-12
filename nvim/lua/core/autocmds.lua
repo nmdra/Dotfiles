@@ -74,8 +74,3 @@ autocmd('BufLeave', {
   command = 'stopinsert'
 })
 
--- Header for script
--- autocmd('BufNewFile',{
---   pattern = '*.sh',
---   command = '0r /home/nimendra/.config/myheader.txt'
--- })
