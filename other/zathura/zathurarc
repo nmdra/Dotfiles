@@ -2,7 +2,7 @@ set sandbox none
 set statusbar-h-padding 0
 set statusbar-v-padding 0
 set page-padding 1
-# set selection-clipboard clipboard
+set selection-clipboard clipboard
 map u scroll half-up
 map d scroll half-down
 map D toggle_page_mode
@@ -15,6 +15,8 @@ map p print
 map g goto top
 set adjust-open "best-fit"
 set guioptions ""
+map D set "first-page-column 1:1"
+map <C-d> set "first-page-column 1:2"
 # theme
 
 # Light/Default mode settings:
