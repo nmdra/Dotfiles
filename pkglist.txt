@@ -5,6 +5,7 @@ adobe-source-sans-fonts
 alacritty
 alsa-firmware
 alsa-utils
+android-tools
 appimagelauncher
 ark
 atool
@@ -69,6 +70,7 @@ github-cli
 glibc
 glibc-locales
 glow
+gparted
 grep
 grub
 grub-btrfs
@@ -127,6 +129,7 @@ lib32-mesa-demos
 lib32-nvidia-utils
 libcanberra
 libdvdcss
+libinput-gestures
 librewolf-bin
 libva-intel-driver
 libva-mesa-driver
@@ -171,6 +174,7 @@ mtpfs
 nano
 nano-syntax-highlighting
 neofetch
+neovide
 neovim
 nerd-fonts-jetbrains-mono
 networkmanager
@@ -191,6 +195,7 @@ numlockx
 nvidia-prime
 nvidia-utils
 nvtop
+onlyoffice-desktopeditors
 openresolv
 openssh
 os-prober
@@ -252,7 +257,6 @@ sof-firmware
 spectacle
 spectre-meltdown-checker
 spotify
-spotify-adblock-git
 squashfs-tools
 sshfs
 stow
@@ -283,6 +287,7 @@ udiskie
 udisks2
 ueberzug
 unarchiver
+unzip
 usb_modeswitch
 usbutils
 util-linux
@@ -310,4 +315,5 @@ xz
 yay
 zathura
 zathura-pdf-mupdf
+zip
 zoxide

@@ -74,6 +74,9 @@ export QT_IM_MODULE=ibus
 #}}}
 
 # alias #{{{
+
+DATE=$(date -I)
+
 alias ls='exa --icons'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 alias lsa='exa --all --icons --long --reverse --sort=modified'
