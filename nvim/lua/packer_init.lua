@@ -59,6 +59,7 @@ use {
     require('nvim-autopairs').setup()
   end
 }
+
 -- }}}
 
 -- Treesitter {{{
