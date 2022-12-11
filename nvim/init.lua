@@ -23,7 +23,6 @@ require('plugins/other') --other configuration
 require('plugins/neoscroll') -- smooth scrolling plugin
 require('plugins/comment') --comment plugin
 require('plugins/toggleterm') -- Terminal
-
 -- Themes
 
 -- Onedark
