@@ -1,6 +1,5 @@
 acpi
 acpid
-adobe-source-han-sans-cn-fonts
 adobe-source-sans-fonts
 alacritty
 alsa-firmware
@@ -31,6 +30,7 @@ chaotic-mirrorlist
 cheese
 code
 coreutils
+cowsay
 cpupower
 cronie
 cryptsetup
@@ -119,6 +119,7 @@ kwin
 kwin-bismuth
 kwrited
 latte-dock
+lazygit
 less
 lf-bin
 lib32-libcanberra
@@ -135,6 +136,7 @@ libva-intel-driver
 libva-mesa-driver
 libva-vdpau-driver
 licenses
+linux-wifi-hotspot
 linux515
 linux515-nvidia
 logrotate
@@ -157,10 +159,9 @@ manjaro-release
 manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
 manjaro-system
-manjaro-zsh-config
 mdadm
 mediainfo
-megasync
+megasync-bin
 memtest86+
 mesa-demos
 mhwd
@@ -183,9 +184,7 @@ networkmanager-openconnect
 networkmanager-openvpn
 networkmanager-pptp
 networkmanager-vpnc
-newsflash
 nfs-utils
-noisetorch-bin
 noto-fonts
 npm
 nss-mdns
@@ -195,6 +194,7 @@ numlockx
 nvidia-prime
 nvidia-utils
 nvtop
+obs-studio
 onlyoffice-desktopeditors
 openresolv
 openssh
@@ -205,7 +205,6 @@ pacman
 pamac-cli
 pamac-gtk
 pamac-tray-icon-plasma
-pandoc-bin
 papirus-folders
 papirus-icon-theme
 partitionmanager
@@ -239,19 +238,20 @@ python-pyqt5
 qbittorrent
 qt5-imageformats
 qt5-virtualkeyboard
-rclone
-rclone-browser
 reiserfsprogs
+rlwrap
 rofi
 rsync
 ruby
 s-nail
 samba
+scrcpy
 sddm
 sddm-breath-theme
 sddm-kcm
 sed
 shadow
+shellcheck-bin
 slop
 sof-firmware
 spectacle
