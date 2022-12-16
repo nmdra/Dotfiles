@@ -1,4 +1,4 @@
-# My Linux Dotfiles
+# My Linux (Messy) Dotfiles
 
 ### OS - Manjaro
 ### DE - KDE/Plasma
@@ -21,7 +21,7 @@
 
 - <a href="https://gitlab.com/nimendra_">Gitlab</a>
 
-- <a href="https://github.com/NMDRA">Github</a>
+- <a href="https://github.com/nmdra">Github</a>
 
 - <a href="https://twitter.com/nimendra_">Twitter</a>
 ![Twitter Follow](https://img.shields.io/twitter/follow/nimendra_?logo=twitter&style=for-the-badge)
