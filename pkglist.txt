@@ -151,6 +151,7 @@ manjaro-application-utility
 manjaro-browser-settings
 manjaro-documentation-en
 manjaro-firmware
+manjaro-grub-theme-blurred
 manjaro-hello
 manjaro-hotfixes
 manjaro-kde-settings
@@ -245,7 +246,6 @@ rsync
 ruby
 s-nail
 samba
-scrcpy
 sddm
 sddm-breath-theme
 sddm-kcm
@@ -282,6 +282,7 @@ trash-cli
 tree
 ttf-bitstream-vera
 ttf-dejavu
+ttf-hack-nerd
 ttf-joypixels
 udiskie
 udisks2

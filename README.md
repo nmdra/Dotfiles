@@ -1,4 +1,4 @@
-# My Linux (Messy) Dotfiles
+# My (Messy) Linux Dotfiles
 
 ### OS - Manjaro
 ### DE - KDE/Plasma
