@@ -36,8 +36,8 @@ opt.laststatus=3            -- Set global statusline
 opt.cursorline= true        -- cursorline
 opt.list = true
 opt.listchars:append "space:⋅"
-opt.winblend = 7
-opt.pumblend = 10
+opt.winblend = 0
+opt.pumblend = 0
 -- opt.listchars:append "eol:"
 --}}}
 -----------------------------------------------------------
