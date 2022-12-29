@@ -1,0 +1,39 @@
+#main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
+  opacity: 0;
+  pointer-events: none;
+}
+#main-window:not([tabsintitlebar="true"]) #TabsToolbar {
+    visibility: collapse !important;
+}
+
+#sidebar-box {
+  min-width: 100px !important;
+}
+
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+  display: none;
+}
+
+#main-window[inFullscreen] #sidebar-box,
+#main-window[inFullscreen] #sidebar-splitter {
+  display: none !important;
+  width: 0px !important;
+}
+
+/* /*Collapse in default state and add transition*/ */
+/* #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] { */
+/*   overflow: hidden; */
+/*   min-width: 150px !important; */
+/*   max-width: 150px !important; */
+/*   transition: all 0.2s ease; */
+/*   border-right: 1px solid #0c0c0d; */
+/*   z-index: 2; */
+/* } */
+
+/* /*Expand to 260px on hover*/ */
+/* #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover, */
+/* #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar { */
+/*   min-width: 260px !important; */
+/*   max-width: 260px !important; */
+/*   z-index: 1; */
+/* } */
