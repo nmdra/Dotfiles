@@ -6,13 +6,15 @@
     echo "Organizing your messy downloads folder"
 
 # First Create Some General Folders
-mkdir Audios Videos PDFs Scripts Images Compressed Others
+mkdir Audios Videos PDFs Scripts Images Compressed Others 1> /dev/null 2> /dev/null
 
 # Audio Files
-mv -nv *.mp3 *.m4a *.flac *.aac *.ogg *.wav Audio_Files
+mv -nv *.mp3 *.m4a *.flac *.aac *.ogg *.wav Audio_Files 1> /dev/null 2> /dev/null
+
 
 # Video Files
-mv -nv *.mp4 *.mov *.avi *.mpg *.mpeg *.webm *.mpv *.mp2 *.wmv *.mkv Videos
+mv -nv *.mp4 *.mov *.avi *.mpg *.mpeg *.webm *.mpv *.mp2 *.wmv *.mkv Videos 1> /dev/null 2> /dev/null
+
 
 # PDFs
 mv -nv *.pdf *.cbr *.cbz *.epub PDFs

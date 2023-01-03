@@ -11,5 +11,5 @@
 
 book=$(fd -a -e epub -e pdf -e cbr -e cbz  |cut -d '/' -f4- | sort -b -d | fzf --reverse --prompt "Search Book:")
 [ -f "$book" ] &&
-xdg-open "/home/nimendra/$book"
+xdg-open "/home/nimendra/$book" 2> /dev/null
 

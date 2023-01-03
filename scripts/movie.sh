@@ -11,6 +11,6 @@
 
 video="$(fd -E Pictures -E Documents -a -e mp4 -e mkv |cut -d '/' -f4- | fzf --reverse --prompt "Search Movie & Tv: ")"
 [ -f "$video" ] &&
-xdg-open /home/nimendra/"$video"
+xdg-open /home/nimendra/"$video" 1> /dev/null 2> /dev/null
 
 
