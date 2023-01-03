@@ -60,6 +60,7 @@ ffmpegthumbs
 file
 filesystem
 findutils
+firefox
 flex
 fzf
 gawk
@@ -131,7 +132,6 @@ lib32-nvidia-utils
 libcanberra
 libdvdcss
 libinput-gestures
-librewolf-bin
 libva-intel-driver
 libva-mesa-driver
 libva-vdpau-driver
