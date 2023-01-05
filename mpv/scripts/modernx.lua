@@ -152,6 +152,8 @@ local osc_icons = {
     replay = "\238\164\160",
     skipback = "\238\164\161",
     skipforward = "\238\164\162",
+    -- skipback = "\238\164\161",
+    -- skipforward = "\238\164\162",
 }
 
 -- internal states, do not touch
