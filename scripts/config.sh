@@ -26,7 +26,7 @@ rsync .zshrc ~/Documents/Dotfiles/zsh
 
 echo "rsync Completed"
 
-rm -rf Documents/Dotfiles/.config/mpv/watch_later
+rm -rf Documents/Dotfiles/mpv/watch_later
 rm -rf Documents/Dotfiles/.config/git
 rm -rf Documents/Dotfiles/nvim/plugin
 echo "removing unessentials"
