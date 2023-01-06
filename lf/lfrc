@@ -25,7 +25,7 @@ cmd mkdir ${{
 cmd mkfile ${{
   printf "File Name: "
   read ans
-  $EDITOR $ans
+  nvim $ans
 }}
 
 cmd zip %zip -r "$f.zip" "$fx"
@@ -70,16 +70,6 @@ cmd fzf_jump ${{
   lf -remote "send $id $cmd \"$res\""
 }}
 
-cmd z %{{
-    result="$(zoxide query --exclude "${PWD}" -- "$@")"
-    lf -remote "send ${id} cd '${result}'"
-}}
-
-cmd zi ${{
-    result="$(zoxide query -i -- "$@")"
-    lf -remote "send ${id} cd '${result}'"
-}}
-
 # Remove some defaults
 map m
 map o
@@ -91,6 +81,7 @@ map c
 map e
 map f
 map y
+
 # Basic Functions
 map . set hidden!
 map DD delete
