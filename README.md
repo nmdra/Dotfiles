@@ -6,9 +6,9 @@
 ### Terminal - Alacritty
 ### File Manager - LF
 ### Text Editor - Neovim
-### Web Browser - Librewolf
+### Web Browser - Firefox with Betterfox user.js
 ### Document Viewer - Zathura
-
+### Media Player - MPV
 ### Terminal & Neovim Theme - Tokyonight
 ### Terminal & Neovim font - JetBrains Mono Nerd Font
 
