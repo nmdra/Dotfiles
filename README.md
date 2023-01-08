@@ -1,5 +1,7 @@
 # My (Messy) Linux Dotfiles
 
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&pause=1000&color=0ED5F7&width=435&lines=Manjaro+KDE;Alacritty;Neovim+%2B+Tmux;LF+File+Manager;MPV)](https://git.io/typing-svg)
+
 ### OS - Manjaro
 ### DE - KDE/Plasma
 ### Shell - Zsh
@@ -12,10 +14,13 @@
 ### Terminal & Neovim Theme - Tokyonight
 ### Terminal & Neovim font - JetBrains Mono Nerd Font
 
+---
+
 ## Preview
 
-![Desktop Preview](/preview.jpg "Desktop Preview")
+![Desktop Preview](/desktop2023.jpg "Desktop Preview")
 
+---
 
 - <a href="https://nimendra.bearblog.dev">Blog</a>
 
