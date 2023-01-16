@@ -36,9 +36,9 @@ opt.laststatus=3            -- Set global statusline
 opt.cursorline= true        -- cursorline
 opt.list = true
 opt.listchars:append "space:⋅"
+-- opt.listchars:append "eol:↴"
 opt.winblend = 0
 opt.pumblend = 0
--- opt.listchars:append "eol:"
 --}}}
 -----------------------------------------------------------
 -- Tabs, indent{{{

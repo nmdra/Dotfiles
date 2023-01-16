@@ -17,6 +17,10 @@ require'lspconfig'.emmet_ls.setup{
 require'lspconfig'.clangd.setup{
   capabilities = capabilities
 }
+
+require 'lspconfig'.gopls.setup{
+  capabilities = capabilities,
+}
 --}}}
 
 local ns = vim.api.nvim_create_namespace('toggle_hlsearch')
