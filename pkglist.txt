@@ -71,6 +71,8 @@ github-cli
 glibc
 glibc-locales
 glow
+go
+gopls
 gparted
 grep
 grub
