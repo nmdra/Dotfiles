@@ -10,6 +10,7 @@ require'lspconfig'.sumneko_lua.setup{
   capabilities = capabilities,
   cmd = {'/bin/lua-language-server'}
 }
+
 require'lspconfig'.emmet_ls.setup{
   capabilities = capabilities
 }
@@ -19,8 +20,14 @@ require'lspconfig'.clangd.setup{
 }
 
 require 'lspconfig'.gopls.setup{
-  capabilities = capabilities,
+  capabilities = capabilities
 }
+
+require'lspconfig'.tsserver.setup{
+  cmd= { "typescript-language-server", "--stdio" },
+  filetypes= { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+}
+
 --}}}
 
 local ns = vim.api.nvim_create_namespace('toggle_hlsearch')
