@@ -8,8 +8,11 @@ local settings = {
 
   -- to bind multiple keys separate them by a space
 
-  -- main key
+  -- main key to show playlist
   key_showplaylist = "SHIFT+ENTER",
+
+  -- display playlist while key is held down
+  key_peek_at_playlist = "",
 
   -- dynamic keys
   key_moveup = "UP",
@@ -22,7 +25,7 @@ local settings = {
   key_unselectfile = "",
   key_playfile = "ENTER",
   key_removefile = "BS",
-  key_closeplaylist = "ESC",
+  key_closeplaylist = "ESC SHIFT+ENTER",
 
   -- extra functionality keys
   key_sortplaylist = "",
@@ -38,7 +41,16 @@ local settings = {
   --'all' will match any extension or protocol if it has one
   --uses json and parses it into a lua table to be able to support .conf file
 
-  filename_replace = "",
+  filename_replace = [[
+    [
+      {
+        "protocol": { "all": true },
+        "rules": [
+          { "%%(%x%x)": "hex_to_char" }
+        ]
+      }
+    ]
+  ]],
 
 --[=====[ START OF SAMPLE REPLACE - Remove this line to use it
   --Sample replace: replaces underscore to space on all files
@@ -83,20 +95,20 @@ local settings = {
   --always put loaded files after currently playing file
   loadfiles_always_append = false,
 
-  --sort playlist on mpv start
-  sortplaylist_on_start = false,
-
   --sort playlist when files are added to playlist
   sortplaylist_on_file_add = false,
 
-  --use alphanumerical sort
-  alphanumsort = true,
+  --default sorting method, must be one of: "name-asc", "name-desc", "date-asc", "date-desc", "size-asc", "size-desc".
+  default_sort = "name-asc",
 
   --"linux | windows | auto"
   system = "auto",
 
   --Use ~ for home directory. Leave as empty to use mpv/playlists
   playlist_savepath = "",
+
+  -- constant filename to save playlist as. Note that it will override existing playlist. Leave empty for generated name.
+  playlist_save_filename = "",
 
   --save playlist automatically after current file was unloaded
   save_playlist_on_file_end = false,
@@ -113,15 +125,18 @@ local settings = {
   --good side is cursor always following current file when going back and forth files with playlist-next/prev
   sync_cursor_on_load = true,
 
-  --playlist open key will toggle visibility instead of refresh, best used with long timeout
-  open_toggles = true,
-
   --allow the playlist cursor to loop from end to start and vice versa
   loop_cursor = true,
 
   --youtube-dl executable for title resolving if enabled, probably "youtube-dl" or "yt-dlp", can be absolute path
   youtube_dl_executable = "youtube-dl",
 
+  -- allow playlistmanager to write watch later config when navigating between files
+  allow_write_watch_later_config = true,
+
+  -- reset cursor navigation when closing or opening playlist
+  reset_cursor_on_close = true,
+  reset_cursor_on_open = true,
 
   --####  VISUAL SETTINGS
 
@@ -129,16 +144,25 @@ local settings = {
   prefer_titles = "url",
 
   --call youtube-dl to resolve the titles of urls in the playlist
-  resolve_titles = false,
+  resolve_url_titles = false,
 
-  -- timeout in seconds for title resolving
+  --call ffprobe to resolve the titles of local files in the playlist (if they exist in the metadata)
+  resolve_local_titles = false,
+
+  -- timeout in seconds for url title resolving
   resolve_title_timeout = 15,
 
-  --osd timeout on inactivity, with high value on this open_toggles is good to be true
-  playlist_display_timeout = 5,
+  -- how many url titles can be resolved at a time. Higher number might lead to stutters.
+  concurrent_title_resolve_limit = 10,
 
-  --amount of entries to show before slicing. Optimal value depends on font/video size etc.
-  showamount = 16,
+  --osd timeout on inactivity in seconds, use 0 for no timeout
+  playlist_display_timeout = 0,
+
+  -- when peeking at playlist, show playlist at the very least for display timeout
+  peek_respect_display_timeout = false,
+
+  -- the maximum amount of lines playlist will render. Optimal value depends on font/video size etc.
+  showamount = 9,
 
   --font size scales by window, if false requires larger font and padding sizes
   scale_playlist_by_window=true,
@@ -151,6 +175,9 @@ local settings = {
   --paddings from top left corner
   text_padding_x = 10,
   text_padding_y = 30,
+  
+  --screen dim when menu is open 0.0 - 1.0 (0 is no dim, 1 is black)
+  curtain_opacity=0,
 
   --set title of window with stripped name
   set_title_stripped = false,
@@ -190,9 +217,6 @@ local settings = {
 
   --output visual feedback to OSD for tasks
   display_osd_feedback = true,
-
-  -- reset cursor navigation when playlist is not visible
-  reset_cursor_on_close = true,
 }
 local opts = require("mp.options")
 opts.read_options(settings, "playlistmanager", function(list) update_opts(list) end)
@@ -222,11 +246,9 @@ local pos = 0
 local plen = 0
 local cursor = 0
 --table for saved media titles for later if we prefer them
-local url_table = {}
--- table for urls that we have request to be resolved to titles
-local requested_urls = {}
---state for if we sort on playlist size change
-local sort_watching = false
+local title_table = {}
+-- table for urls and local file paths that we have requested to be resolved to titles
+local requested_titles = {}
 
 local filetype_lookup = {}
 
@@ -253,7 +275,11 @@ function update_opts(changelog)
     end
   end
 
-  if changelog.resolve_titles then
+  if changelog.resolve_url_titles then
+    resolve_titles()
+  end
+
+  if changelog.resolve_local_titles then
     resolve_titles()
   end
 
@@ -267,32 +293,75 @@ end
 
 update_opts({filename_replace = true, loadfiles_filetypes = true})
 
-function on_loaded()
+local sort_modes = {
+  {
+    id="name-asc",
+    title="name ascending",
+    sort_fn=function (a, b, playlist)
+      return alphanumsort(playlist[a].string, playlist[b].string)
+    end,
+  },
+  {
+    id="name-desc",
+    title="name descending",
+    sort_fn=function (a, b, playlist)
+      return alphanumsort(playlist[b].string, playlist[a].string)
+    end,
+  },
+  {
+    id="date-asc",
+    title="date ascending",
+    sort_fn=function (a, b)
+      return (get_file_info(a).mtime or 0) < (get_file_info(b).mtime or 0)
+    end,
+  },
+  {
+    id="date-desc",
+    title="date descending",
+    sort_fn=function (a, b)
+      return (get_file_info(a).mtime or 0) > (get_file_info(b).mtime or 0)
+    end,
+  },
+  {
+    id="size-asc",
+    title="size ascending",
+    sort_fn=function (a, b)
+      return (get_file_info(a).size or 0) < (get_file_info(b).size or 0)
+    end,
+  },
+  {
+    id="size-desc",
+    title="size descending",
+    sort_fn=function (a, b)
+      return (get_file_info(a).size or 0) > (get_file_info(b).size or 0)
+    end,
+  },
+}
+
+local sort_mode = 1
+for mode, sort_data in pairs(sort_modes) do
+  if sort_data.id == settings.default_sort then
+    sort_mode = mode
+  end
+end
+
+function is_protocol(path)
+  return type(path) == 'string' and path:match('^%a[%a%d-_]+://') ~= nil
+end
+
+function on_file_loaded()
+  refresh_globals()
   filename = mp.get_property("filename")
   path = mp.get_property('path')
-  local ext = filename:match("%.(.+)$")
-  if not ext or not filetype_lookup[ext:lower()] then
-    -- a directory or playlist has been loaded, let's not do anything as mpv will expand it into files
-    return
-  end
-  --if not a url then join path with working directory
-  if not path:match("^%a%a+:%/%/") then
-    path = utils.join_path(mp.get_property('working-directory'), path)
-    directory = utils.split_path(path)
-  else
-    directory = nil
+  local media_title = mp.get_property("media-title")
+  if is_protocol(path) and not title_table[path] and path ~= media_title then
+    title_table[path] = media_title
   end
 
-  refresh_globals()
   if settings.sync_cursor_on_load then
     cursor=pos
     --refresh playlist if cursor moved
     if playlist_visible then draw_playlist() end
-  end
-
-  local media_title = mp.get_property("media-title")
-  if path:match('^https?://') and not url_table[path] and path ~= media_title then
-    url_table[path] = media_title
   end
 
   strippedname = stripfilename(mp.get_property('media-title'))
@@ -304,31 +373,31 @@ function on_loaded()
   if settings.set_title_stripped then
     mp.set_property("title", settings.title_prefix..strippedname..settings.title_suffix)
   end
+end
 
-  local didload = false
+function on_start_file()
+  refresh_globals()
+  filename = mp.get_property("filename")
+  path = mp.get_property('path')
+  --if not a url then join path with working directory
+  if not is_protocol(path) then
+    path = utils.join_path(mp.get_property('working-directory'), path)
+    directory = utils.split_path(path)
+  else
+    directory = nil
+  end
+
   if settings.loadfiles_on_start and plen == 1 then
-    didload = true --save reference for sorting
-    msg.info("Loading files from playing files directory")
-    playlist()
-  end
-
-  --if we promised to sort files on launch do it
-  if promised_sort then
-    promised_sort = false
-    msg.info("Your playlist is sorted before starting playback")
-    if didload then sortplaylist() else sortplaylist(true) end
-  end
-
-  --if we promised to listen and sort on playlist size increase do it
-  if promised_sort_watch then
-    promised_sort_watch = false
-    sort_watching = true
-    msg.info("Added files will be automatically sorted")
-    mp.observe_property('playlist-count', "number", autosort)
+    local ext = filename:match("%.([^%.]+)$")
+    -- a directory or playlist has been loaded, let's not do anything as mpv will expand it into files
+    if ext and filetype_lookup[ext:lower()] then
+      msg.info("Loading files from playing files directory")
+      playlist()
+    end
   end
 end
 
-function on_closed()
+function on_end_file()
   if settings.save_playlist_on_file_end then save_playlist() end
   strippedname = nil
   path = nil
@@ -346,19 +415,31 @@ function escapepath(dir, escapechar)
   return string.gsub(dir, escapechar, '\\'..escapechar)
 end
 
+function replace_table_has_value(value, valid_values)
+  if value == nil or valid_values == nil then
+    return false
+  end
+  return valid_values['all'] or valid_values[value]
+end
+
+local filename_replace_functions = {
+  --decode special characters in url
+  hex_to_char = function(x) return string.char(tonumber(x, 16)) end
+}
+
 --strip a filename based on its extension or protocol according to rules in settings
 function stripfilename(pathfile, media_title)
   if pathfile == nil then return '' end
-  local ext = pathfile:match("^.+%.(.+)$")
+  local ext = pathfile:match("%.([^%.]+)$")
   local protocol = pathfile:match("^(%a%a+)://")
   if not ext then ext = "" end
   local tmp = pathfile
   if settings.filename_replace and not media_title then
     for k,v in ipairs(settings.filename_replace) do
-      if ( v['ext'] and (v['ext'][ext] or (ext and not protocol and v['ext']['all'])) )
-      or ( v['protocol'] and (v['protocol'][protocol] or (protocol and not ext and v['protocol']['all'])) ) then
+      if replace_table_has_value(ext, v['ext']) or replace_table_has_value(protocol, v['protocol']) then
         for ruleindex, indexrules in ipairs(v['rules']) do
           for rule, override in pairs(indexrules) do
+            override = filename_replace_functions[override] or override
             tmp = tmp:gsub(rule, override)
           end
         end
@@ -371,6 +452,19 @@ function stripfilename(pathfile, media_title)
   return tmp
 end
 
+--gets the file info of an item
+function get_file_info(item)
+  local path = mp.get_property('playlist/' .. item - 1 .. '/filename')
+  if is_protocol(path) then return {} end
+  local file_info = utils.file_info(path)
+  if not file_info then
+    msg.warn('failed to read file info for', path)
+    return {}
+  end
+
+  return file_info
+end
+
 --gets a nicename of playlist entry at 0-based position i
 function get_name_from_index(i, notitle)
   refresh_globals()
@@ -379,17 +473,17 @@ function get_name_from_index(i, notitle)
   local title = mp.get_property('playlist/'..i..'/title')
   local name = mp.get_property('playlist/'..i..'/filename')
 
-  local should_use_title = settings.prefer_titles == 'all' or name:match('^https?://') and settings.prefer_titles == 'url'
+  local should_use_title = settings.prefer_titles == 'all' or is_protocol(name) and settings.prefer_titles == 'url'
   --check if file has a media title stored or as property
   if not title and should_use_title then
     local mtitle = mp.get_property('media-title')
     if i == pos and mp.get_property('filename') ~= mtitle then
-      if not url_table[name] then
-        url_table[name] = mtitle
+      if not title_table[name] then
+        title_table[name] = mtitle
       end
       title = mtitle
-    elseif url_table[name] then
-      title = url_table[name]
+    elseif title_table[name] then
+      title = title_table[name]
     end
   end
 
@@ -461,7 +555,21 @@ end
 function draw_playlist()
   refresh_globals()
   local ass = assdraw.ass_new()
-  ass:new_event()
+	
+  local _, _, a = mp.get_osd_size()
+  local h = 360
+  local w = h * a
+
+  if settings.curtain_opacity ~= nil and settings.curtain_opacity ~= 0 and settings.curtain_opacity < 1.0 then
+  -- curtain dim from https://github.com/christoph-heinrich/mpv-quality-menu/blob/501794bfbef468ee6a61e54fc8821fe5cd72c4ed/quality-menu.lua#L699-L707
+    local alpha = 255 - math.ceil(255 * settings.curtain_opacity)
+    ass.text = string.format('{\\pos(0,0)\\rDefault\\an7\\1c&H000000&\\alpha&H%X&}', alpha)
+    ass:draw_start()
+    ass:rect_cw(0, 0, w, h)
+    ass:draw_stop()
+    ass:new_event()
+  end
+	
   ass:append(settings.style_ass_tags)
 
   -- TODO: padding should work even on different osd alignments
@@ -472,54 +580,138 @@ function draw_playlist()
   if settings.playlist_header ~= "" then
     ass:append(parse_header(settings.playlist_header).."\\N")
   end
-  local start = cursor - math.floor(settings.showamount/2)
-  local showall = false
-  local showrest = false
-  if start<0 then start=0 end
-  if plen <= settings.showamount then
-    start=0
-    showall=true
-  end
-  if start > math.max(plen-settings.showamount-1, 0) then
-    start=plen-settings.showamount
-    showrest=true
-  end
-  if start > 0 and not showall then ass:append(settings.playlist_sliced_prefix.."\\N") end
-  for index=start,start+settings.showamount-1,1 do
-    if index == plen then break end
 
-    ass:append(parse_filename_by_index(index).."\\N")
-    if index == start+settings.showamount-1 and not showall and not showrest then
+  -- (visible index, playlist index) pairs of playlist entries that should be rendered
+  local visible_indices = {}
+
+  local one_based_cursor = cursor + 1
+  table.insert(visible_indices, one_based_cursor)
+
+  local offset = 1;
+  local visible_indices_length = 1;
+  while visible_indices_length < settings.showamount and visible_indices_length < plen do
+    -- add entry for offset steps below the cursor
+    local below = one_based_cursor + offset
+    if below <= plen then
+      table.insert(visible_indices, below)
+      visible_indices_length = visible_indices_length + 1;
+    end
+
+    -- add entry for offset steps above the cursor
+    -- also need to double check that there is still space, this happens if we have even numbered limit
+    local above = one_based_cursor - offset
+    if above >= 1 and visible_indices_length < settings.showamount and visible_indices_length < plen then
+      table.insert(visible_indices, 1, above)
+      visible_indices_length = visible_indices_length + 1;
+    end
+
+    offset = offset + 1
+  end
+
+  -- both indices are 1 based
+  for display_index, playlist_index in pairs(visible_indices) do
+    if display_index == 1 and playlist_index ~= 1 then
+      ass:append(settings.playlist_sliced_prefix.."\\N")
+    elseif display_index == settings.showamount and playlist_index ~= plen then
       ass:append(settings.playlist_sliced_suffix)
+    else
+      -- parse_filename_by_index expects 0 based index
+      ass:append(parse_filename_by_index(playlist_index - 1).."\\N")
     end
   end
-  local w, h = mp.get_osd_size()
+
   if settings.scale_playlist_by_window then w,h = 0, 0 end
   mp.set_osd_ass(w, h, ass.text)
 end
 
-function toggle_playlist()
-  if settings.open_toggles then
-    if playlist_visible then
-      remove_keybinds()
-      return
+local peek_display_timer = nil
+local peek_button_pressed = false
+
+function peek_timeout()
+  peek_display_timer:kill()
+  if not peek_button_pressed and not playlist_visible then
+    remove_keybinds()
+  end
+end
+
+function handle_complex_playlist_toggle(table)
+  local event = table["event"]
+  if event == "press" then
+    msg.error("Complex key event not supported. Falling back to normal playlist display.")
+    showplaylist()
+  elseif event == "down" then
+    showplaylist(1000000)
+    if settings.peek_respect_display_timeout then
+      peek_button_pressed = true
+      peek_display_timer = mp.add_periodic_timer(settings.playlist_display_timeout, peek_timeout)
+    end
+  elseif event == "up" then
+    -- set playlist state to not visible, doesn't actually hide playlist yet
+    -- this will allow us to check if other functionality has rendered playlist before removing binds
+    playlist_visible = false
+
+    function remove_keybinds_after_timeout()
+      -- if playlist is still not visible then lets actually hide it
+      -- this lets other keys that interupt the peek to render playlist without peek up event closing it
+      if not playlist_visible then
+        remove_keybinds()
+      end
+    end
+
+    if settings.peek_respect_display_timeout then
+      peek_button_pressed = false
+      if not peek_display_timer:is_enabled() then
+        mp.add_timeout(0.01, remove_keybinds_after_timeout)
+      end
+    else
+      -- use small delay to let dynamic binds run before keys are potentially unbound
+      mp.add_timeout(0.01, remove_keybinds_after_timeout)
     end
   end
-  showplaylist()
+end
+
+function toggle_playlist(show_function)
+  local show = show_function or showplaylist
+  if playlist_visible then
+    remove_keybinds()
+  else
+    -- toggle always shows without timeout
+    show(0)
+  end
 end
 
 function showplaylist(duration)
   refresh_globals()
   if plen == 0 then return end
+  if not playlist_visible and settings.reset_cursor_on_open then
+    resetcursor()
+  end
+
   playlist_visible = true
   add_keybinds()
 
   draw_playlist()
   keybindstimer:kill()
-  if duration then
-    keybindstimer = mp.add_periodic_timer(duration, remove_keybinds)
-  else
-    keybindstimer:resume()
+
+  local dur = duration or settings.playlist_display_timeout
+  if dur > 0 then
+    keybindstimer = mp.add_periodic_timer(dur, remove_keybinds)
+  end
+end
+
+function showplaylist_non_interactive(duration)
+  refresh_globals()
+  if plen == 0 then return end
+  if not playlist_visible and settings.reset_cursor_on_open then
+    resetcursor()
+  end
+  playlist_visible = true
+  draw_playlist()
+  keybindstimer:kill()
+
+  local dur = duration or settings.playlist_display_timeout
+  if dur > 0 then
+    keybindstimer = mp.add_periodic_timer(dur, remove_keybinds)
   end
 end
 
@@ -541,6 +733,7 @@ function unselectfile()
 end
 
 function resetcursor()
+  selection = nil
   cursor = mp.get_property_number('playlist-pos', 1)
 end
 
@@ -551,7 +744,11 @@ function removefile()
   if cursor==pos then mp.command("script-message unseenplaylist mark true \"playlistmanager avoid conflict when removing file\"") end
   mp.commandv("playlist-remove", cursor)
   if cursor==plen-1 then cursor = cursor - 1 end
-  showplaylist()
+  if plen == 1 then
+    remove_keybinds()
+  else
+    showplaylist()
+  end
 end
 
 function moveup()
@@ -619,8 +816,10 @@ function moveend()
 end
 
 function write_watch_later(force_write)
-  if mp.get_property_bool("save-position-on-quit") or force_write then
-    mp.command("write-watch-later-config")
+  if settings.allow_write_watch_later_config then
+    if mp.get_property_bool("save-position-on-quit") or force_write then
+      mp.command("write-watch-later-config")
+    end
   end
 end
 
@@ -654,46 +853,16 @@ function playfile()
   end
 end
 
-function get_files_windows(dir)
-  local args = {
-    'powershell', '-NoProfile', '-Command', [[& {
-          Trap {
-              Write-Error -ErrorRecord $_
-              Exit 1
-          }
-          $path = "]]..dir..[["
-          $escapedPath = [WildcardPattern]::Escape($path)
-          cd $escapedPath
-
-          $list = (Get-ChildItem -File | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) }).Name
-          $string = ($list -join "/")
-          $u8list = [System.Text.Encoding]::UTF8.GetBytes($string)
-          [Console]::OpenStandardOutput().Write($u8list, 0, $u8list.Length)
-      }]]
-  }
-  local process = utils.subprocess({ args = args, cancellable = false })
-  return parse_files(process, '%/')
-end
-
-function get_files_linux(dir)
-  local args = { 'ls', '-1pv', dir }
-  local process = utils.subprocess({ args = args, cancellable = false })
-  return parse_files(process, '\n')
-end
-
-function parse_files(res, delimiter)
-  if not res.error and res.status == 0 then
-    local valid_files = {}
-    for line in res.stdout:gmatch("[^"..delimiter.."]+") do
-      local ext = line:match("^.+%.(.+)$")
-      if ext and filetype_lookup[ext:lower()] then
-        table.insert(valid_files, line)
-      end
+function file_filter(filenames)
+    local files = {}
+    for i = 1, #filenames do
+        local file = filenames[i]
+        local ext = file:match('%.([^%.]+)$')
+        if ext and filetype_lookup[ext:lower()] then
+            table.insert(files, file)
+        end
     end
-    return valid_files, nil
-  else
-    return nil, res.error
-  end
+    return files
 end
 
 function get_playlist_filenames_set()
@@ -718,13 +887,16 @@ function playlist(force_dir)
   else
     dir = directory
   end
+
+  if dir == "." then dir = "" end
   if force_dir then dir = force_dir end
 
-  local files, error
-  if settings.system == "linux" then
-    files, error = get_files_linux(dir)
-  else
-    files, error = get_files_windows(dir)
+  local files = file_filter(utils.readdir(dir, "files"))
+  table.sort(files, alphanumsort)
+
+  if files == nil then
+    msg.verbose("no files in directory")
+    return
   end
 
   local filenames = get_playlist_filenames_set()
@@ -733,6 +905,9 @@ function playlist(force_dir)
     local cur = false
     local filename = mp.get_property("filename")
     for _, file in ipairs(files) do
+      if file == nil or file[1] == "." then
+          break
+      end
       local appendstr = "append"
       if not hasfile then
         cur = true
@@ -755,20 +930,24 @@ function playlist(force_dir)
       end
     end
     if c2 > 0 or c>0 then
-      mp.osd_message("Added "..c + c2.." files to playlist")
+      msg.info("Added "..c + c2.." files to playlist")
     else
-      mp.osd_message("No additional files found")
+      msg.info("No additional files found")
     end
     cursor = mp.get_property_number('playlist-pos', 1)
   else
     msg.error("Could not scan for files: "..(error or ""))
   end
-  if sort_watching then
-    msg.info("Ignoring directory structure and using playlist sort")
-    sortplaylist()
-  end
   refresh_globals()
-  if playlist_visible then showplaylist() end
+  if playlist_visible then
+    showplaylist()
+  elseif settings.display_osd_feedback then
+    if c2 > 0 or c>0 then
+      mp.osd_message("Added "..c + c2.." files to playlist")
+    else
+      mp.osd_message("No additional files found")
+    end
+  end
   return c + c2
 end
 
@@ -827,25 +1006,33 @@ function save_playlist(filename)
     end
   end
 
-  local date = os.date("*t")
-  local datestring = ("%02d-%02d-%02d_%02d-%02d-%02d"):format(date.year, date.month, date.day, date.hour, date.min, date.sec)
+  local name = filename
+  if name == nil then
+    if settings.playlist_save_filename == nil or settings.playlist_save_filename == "" then
+      local date = os.date("*t")
+      local datestring = ("%02d-%02d-%02d_%02d-%02d-%02d"):format(date.year, date.month, date.day, date.hour, date.min, date.sec)
 
-  local name = filename or datestring.."_playlist-size_"..length..".m3u"
+      name = datestring.."_playlist-size_"..length..".m3u"
+    else
+      name = settings.playlist_save_filename
+    end
+  end
 
   local savepath = utils.join_path(savepath, name)
   local file, err = io.open(savepath, "w")
   if not file then
     msg.error("Error in creating playlist file, check permissions. Error: "..(err or "unknown"))
   else
+    file:write("#EXTM3U\n")
     local i=0
     while i < length do
       local pwd = mp.get_property("working-directory")
       local filename = mp.get_property('playlist/'..i..'/filename')
       local fullpath = filename
-      if not filename:match("^%a%a+:%/%/") then
+      if not is_protocol(filename) then
         fullpath = utils.join_path(pwd, filename)
       end
-      local title = mp.get_property('playlist/'..i..'/title') or url_table[filename]
+      local title = mp.get_property('playlist/'..i..'/title') or title_table[filename]
       if title then
         file:write("#EXTINF:,"..title.."\n")
       end
@@ -868,14 +1055,6 @@ function alphanumsort(a, b)
        < tostring(b):lower():gsub("%.?%d+",padnum)..("%3d"):format(#a)
 end
 
-function dosort(a,b)
-  if settings.alphanumsort then
-    return alphanumsort(a,b)
-  else
-    return a < b
-  end
-end
-
 -- fast sort algo from https://github.com/zsugabubus/dotfiles/blob/master/.config/mpv/scripts/playlist-filtersort.lua
 function sortplaylist(startover)
   local playlist = mp.get_property_native('playlist')
@@ -883,12 +1062,12 @@ function sortplaylist(startover)
 
   local order = {}
   for i=1, #playlist do
-    order[i] = i
+		order[i] = i
     playlist[i].string = get_name_from_index(i - 1, true)
-  end
+	end
 
   table.sort(order, function(a, b)
-    return dosort(playlist[a].string, playlist[b].string)
+    return sort_modes[sort_mode].sort_fn(a, b, playlist)
   end)
 
   for i=1, #playlist do
@@ -906,19 +1085,25 @@ function sortplaylist(startover)
       playlist[j], playlist[i] = playlist[i], playlist[j]
     end
   end
+
+  for i = 1, #playlist do
+    local filename = mp.get_property('playlist/' .. i - 1 .. '/filename')
+    local ext = filename:match("%.([^%.]+)$")
+    if not ext or not filetype_lookup[ext:lower()] then
+      --move the directory to the end of the playlist
+      mp.commandv('playlist-move', i - 1, #playlist)
+    end
+  end
+
   cursor = mp.get_property_number('playlist-pos', 0)
   if startover then
     mp.set_property('playlist-pos', 0)
   end
-  if playlist_visible then showplaylist() end
-end
-
-function autosort(name, param)
-  if param == 0 then return end
-  if plen < param then
-    msg.info("Playlistmanager autosorting playlist")
-    refresh_globals()
-    sortplaylist()
+  if playlist_visible then
+    showplaylist()
+  end
+  if settings.display_osd_feedback then
+    mp.osd_message("Playlist sorted with "..sort_modes[sort_mode].title)
   end
 end
 
@@ -941,6 +1126,17 @@ function shuffleplaylist()
   mp.command("playlist-shuffle")
   math.randomseed(os.time())
   mp.commandv("playlist-move", pos, math.random(0, plen-1))
+
+  local playlist = mp.get_property_native('playlist')
+  for i = 1, #playlist do
+    local filename = mp.get_property('playlist/' .. i - 1 .. '/filename')
+    local ext = filename:match("%.([^%.]+)$")
+    if not ext or not filetype_lookup[ext:lower()] then
+      --move the directory to the end of the playlist
+      mp.commandv('playlist-move', i - 1, #playlist)
+    end
+  end
+
   mp.set_property('playlist-pos', 0)
   refresh_globals()
   if playlist_visible then
@@ -1038,79 +1234,181 @@ if settings.loadfiles_on_idle_start and mp.get_property_number('playlist-count',
   playlist()
 end
 
-promised_sort_watch = false
-if settings.sortplaylist_on_file_add then
-  promised_sort_watch = true
-end
-
-promised_sort = false
-if settings.sortplaylist_on_start then
-  promised_sort = true
-end
-
-mp.observe_property('playlist-count', "number", function()
+mp.observe_property('playlist-count', "number", function(_, plcount)
+  --if we promised to listen and sort on playlist size increase do it
+  if settings.sortplaylist_on_file_add and (plcount > plen) then
+    msg.info("Added files will be automatically sorted")
+    refresh_globals()
+    sortplaylist()
+  end
   if playlist_visible then showplaylist() end
-  if settings.prefer_titles == 'none' then return end
-  -- resolve titles
   resolve_titles()
 end)
 
---resolves url titles by calling youtube-dl
+
+url_request_queue = {}
+function url_request_queue.push(item) table.insert(url_request_queue, item) end
+function url_request_queue.pop() return table.remove(url_request_queue, 1) end
+local url_titles_to_fetch = url_request_queue
+local ongoing_url_requests = {}
+
+function url_fetching_throttler()
+  if #url_titles_to_fetch == 0 then
+    url_title_fetch_timer:kill()
+  end
+
+  local ongoing_url_requests_count = 0
+  for _, ongoing in pairs(ongoing_url_requests) do
+    if ongoing then
+      ongoing_url_requests_count = ongoing_url_requests_count + 1
+    end
+  end
+
+  -- start resolving some url titles if there is available slots
+  local amount_to_fetch = math.max(0, settings.concurrent_title_resolve_limit - ongoing_url_requests_count)
+  for index=1,amount_to_fetch,1 do
+    local file = url_titles_to_fetch.pop()
+    if file then
+      ongoing_url_requests[file] = true
+      resolve_ytdl_title(file)
+    end
+  end
+end
+
+url_title_fetch_timer = mp.add_periodic_timer(0.1, url_fetching_throttler)
+url_title_fetch_timer:kill()
+
+local_request_queue = {}
+function local_request_queue.push(item) table.insert(local_request_queue, item) end
+function local_request_queue.pop() return table.remove(local_request_queue, 1) end
+local local_titles_to_fetch = local_request_queue
+local ongoing_local_request = false
+
+-- this will only allow 1 concurrent local title resolve process
+function local_fetching_throttler()
+  if not ongoing_local_request then
+    local file = local_titles_to_fetch.pop()
+    if file then
+      ongoing_local_request = true
+      resolve_ffprobe_title(file)
+    end
+  end
+end
+
 function resolve_titles()
-  if not settings.resolve_titles then return end
+  if settings.prefer_titles == 'none' then return end
+  if not settings.resolve_url_titles and not settings.resolve_local_titles then return end
+
   local length = mp.get_property_number('playlist-count', 0)
   if length < 2 then return end
-  local i=0
   -- loop all items in playlist because we can't predict how it has changed
-  while i < length do
+  local added_urls = false
+  local added_local = false
+  for i=0,length - 1,1 do
     local filename = mp.get_property('playlist/'..i..'/filename')
     local title = mp.get_property('playlist/'..i..'/title')
     if i ~= pos
       and filename
-      and filename:match('^https?://')
       and not title
-      and not url_table[filename]
-      and not requested_urls[filename]
+      and not title_table[filename]
+      and not requested_titles[filename]
     then
-      requested_urls[filename] = true
-
-      local args = { settings.youtube_dl_executable, '--no-playlist', '--flat-playlist', '-sJ', filename }
-      local req = mp.command_native_async(
-        {
-          name = "subprocess",
-          args = args,
-          playback_only = false,
-          capture_stdout = true
-        }, function (success, res)
-            if res.killed_by_us then
-              msg.verbose('Request to resolve url title ' .. filename .. ' timed out')
-              return
-            end
-            if res.status == 0 then
-              local json, err = utils.parse_json(res.stdout)
-              if not err then
-                local is_playlist = json['_type'] and json['_type'] == 'playlist'
-                local title = (is_playlist and '[playlist]: ' or '') .. json['title']
-                msg.verbose(filename .. " resolved to '" .. title .. "'")
-                url_table[filename] = title
-                refresh_globals()
-                if playlist_visible then showplaylist() end
-                return
-              else
-                msg.error("Failed parsing json, reason: "..(err or "unknown"))
-              end
-            else
-              msg.error("Failed to resolve url title "..filename.." Error: "..(res.error or "unknown"))
-            end
-          end)
-
-      mp.add_timeout(settings.resolve_title_timeout, function()
-        mp.abort_async_command(req)
-      end)
-
+      requested_titles[filename] = true
+      if filename:match('^https?://') then
+        url_titles_to_fetch.push(filename)
+        added_urls = true
+      elseif settings.prefer_titles == "all" then
+        local_titles_to_fetch.push(filename)
+        added_local = true
+      end
     end
-    i=i+1
   end
+  if added_urls then
+    url_title_fetch_timer:resume()
+  end
+  if added_local then
+    local_fetching_throttler()
+  end
+end
+
+function resolve_ytdl_title(filename)
+  local args = {
+    settings.youtube_dl_executable,
+    '--no-playlist',
+    '--flat-playlist',
+    '-sJ',
+    '--no-config',
+    filename,
+  }
+  local req = mp.command_native_async(
+    {
+      name = "subprocess",
+      args = args,
+      playback_only = false,
+      capture_stdout = true
+    },
+    function (success, res)
+      ongoing_url_requests[filename] = false
+      if res.killed_by_us then
+        msg.verbose('Request to resolve url title ' .. filename .. ' timed out')
+        return
+      end
+      if res.status == 0 then
+        local json, err = utils.parse_json(res.stdout)
+        if not err then
+          local is_playlist = json['_type'] and json['_type'] == 'playlist'
+          local title = (is_playlist and '[playlist]: ' or '') .. json['title']
+          msg.verbose(filename .. " resolved to '" .. title .. "'")
+          title_table[filename] = title
+          refresh_globals()
+          if playlist_visible then showplaylist() end
+        else
+          msg.error("Failed parsing json, reason: "..(err or "unknown"))
+        end
+      else
+        msg.error("Failed to resolve url title "..filename.." Error: "..(res.error or "unknown"))
+      end
+    end
+  )
+
+  mp.add_timeout(
+    settings.resolve_title_timeout,
+    function()
+      mp.abort_async_command(req)
+      ongoing_url_requests[filename] = false
+    end
+  )
+end
+
+function resolve_ffprobe_title(filename)
+  local args = { "ffprobe", "-show_format", "-show_entries", "format=tags", "-loglevel", "quiet", filename }
+  local req = mp.command_native_async(
+    {
+      name = "subprocess",
+      args = args,
+      playback_only = false,
+      capture_stdout = true
+    },
+    function (success, res)
+      ongoing_local_request = false
+      local_fetching_throttler()
+      if res.killed_by_us then
+        msg.verbose('Request to resolve local title ' .. filename .. ' timed out')
+        return
+      end
+      if res.status == 0 then
+        local title = string.match(res.stdout, "title=([^\n\r]+)")
+        if title then
+          msg.verbose(filename .. " resolved to '" .. title .. "'")
+          title_table[filename] = title
+          refresh_globals()
+          if playlist_visible then showplaylist() end
+        end
+      else
+        msg.error("Failed to resolve local title "..filename.." Error: "..(res.error or "unknown"))
+      end
+    end
+  )
 end
 
 --script message handler
@@ -1120,7 +1418,16 @@ function handlemessage(msg, value, value2)
       showplaylist(value2)
       return
     else
-      toggle_playlist()
+      toggle_playlist(showplaylist)
+      return
+    end
+  end
+  if msg == "show" and value == "playlist-nokeys" then
+    if value2 ~= "toggle" then
+      showplaylist_non_interactive(value2)
+      return
+    else
+      toggle_playlist(showplaylist_non_interactive)
       return
     end
   end
@@ -1138,16 +1445,28 @@ function handlemessage(msg, value, value2)
   if msg == "playlist-next" then playlist_next(true) ; return end
   if msg == "playlist-prev" then playlist_prev(true) ; return end
   if msg == "enable-interactive-save" then interactive_save = true end
+  if msg == "close" then remove_keybinds() end
 end
 
 mp.register_script_message("playlistmanager", handlemessage)
 
-bind_keys(settings.key_sortplaylist, "sortplaylist", sortplaylist)
+bind_keys(settings.key_sortplaylist, "sortplaylist", function()
+  sortplaylist()
+  sort_mode = sort_mode + 1
+  if sort_mode > #sort_modes then sort_mode = 1 end
+end)
 bind_keys(settings.key_shuffleplaylist, "shuffleplaylist", shuffleplaylist)
 bind_keys(settings.key_reverseplaylist, "reverseplaylist", reverseplaylist)
 bind_keys(settings.key_loadfiles, "loadfiles", playlist)
 bind_keys(settings.key_saveplaylist, "saveplaylist", activate_playlist_save)
-bind_keys(settings.key_showplaylist, "showplaylist", toggle_playlist)
+bind_keys(settings.key_showplaylist, "showplaylist", showplaylist)
+bind_keys(
+  settings.key_peek_at_playlist,
+  "peek_at_playlist",
+  handle_complex_playlist_toggle,
+  { complex=true }
+)
 
-mp.register_event("start-file", on_loaded)
-mp.register_event("end-file", on_closed)
+mp.register_event("start-file", on_start_file)
+mp.register_event("file-loaded", on_file_loaded)
+mp.register_event("end-file", on_end_file)
