@@ -180,7 +180,6 @@ nano-syntax-highlighting
 neofetch
 neovide
 neovim
-nerd-fonts-jetbrains-mono
 networkmanager
 networkmanager-l2tp
 networkmanager-openconnect
@@ -198,6 +197,7 @@ nvidia-prime
 nvidia-utils
 nvtop
 obs-studio
+octave
 onlyoffice-desktopeditors
 openresolv
 openssh
@@ -243,7 +243,6 @@ qt5-imageformats
 qt5-virtualkeyboard
 reiserfsprogs
 rlwrap
-rofi
 rsync
 ruby
 s-nail
@@ -285,6 +284,7 @@ tree
 ttf-bitstream-vera
 ttf-dejavu
 ttf-hack-nerd
+ttf-jetbrains-mono-nerd
 ttf-joypixels
 udiskie
 udisks2
