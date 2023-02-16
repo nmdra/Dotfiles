@@ -1,20 +1,2 @@
-super + p
-    rofi -show drun -show-icons -dpi 125
-
-super + q
-    rofi -show p -modi p:rofi-power-menu -dpi 130
-
-super + alt + {0-9}
-    playerctl volume 0.{0-9}
-
-super + shift + n
-    playerctl next
-
-super + shift + b
-    playerctl previous
-
-super + shift + p
-    playerctl play-pause
-
 super + m
     alacritty -t File\ Manager -e tmux new-session -A -D -s Files "lfub.sh"
