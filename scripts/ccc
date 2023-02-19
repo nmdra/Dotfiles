@@ -1,0 +1,5 @@
+#!/bin/bash
+
+choose="$(fd -d 1 -e c | fzf --reverse)" &&
+cc "$choose" -o hello &&
+./hello
