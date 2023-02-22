@@ -70,3 +70,5 @@ map('n', '<leader>a', ':set spell!<CR>') --spell checking
 map('n', '<leader>st', ':LspStop<CR>') -- LSP stop
 map('n', '<leader>n', ':bNext<CR>') -- next buffer
 map('n', '<leader>cl', ':ColorizerToggle<CR>') --Show Color
+
+map('n', '<leader>cc', ':TermExec cmd=ccc<CR>') -- ccc
