@@ -1,5 +1,35 @@
 #!/bin/bash
 
-choose="$(fd -d 1 -e c | fzf --reverse)" &&
-cc "$choose" -o hello &&
-./hello
+# Simple Script for Compile & Run C programs
+# Shellcheck Passed.
+# Contributors: nimendra
+# Last Update: 2023-02-20 11:04
+# github.com/nmdra
+# twitter.com/nimendra_
+# Installations👇
+# Dependencies: fd, fzf, gcc,
+# mv ccc ./local/bin && chmod +x ccc
+# --------------------------------------------
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NOCOLOR='\033[0m'
+
+# Choosing .c file with Fzf
+choose="$(fd -d 1 -e c | fzf --cycle --reverse)" &&
+
+cc "$choose" -o "$choose%.*" && # Compile C program with Gcc
+echo -e "👇$choose ${GREEN}Compiled successfully.✅${NOCOLOR}\n" &&
+
+# Run Compiled Program
+if test -f "$choose%.*"; then
+    ./"$choose%.*" && rm "$choose%.*" # Run program & Remove Compiled program
+else
+    echo -e "${RED}Program doesn't exist 🤯${NOCOLOR}"
+fi
+
+# $choose%.* for Remove .c extesion
+
+
+
