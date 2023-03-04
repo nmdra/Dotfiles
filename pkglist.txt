@@ -65,7 +65,6 @@ flex
 fzf
 gawk
 gcc-libs
-gdb
 gettext
 gimp
 github-cli
