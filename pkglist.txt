@@ -14,6 +14,7 @@ autoconf
 automake
 avahi
 b43-fwcutter
+base-devel
 bash
 bash-language-server
 bat
@@ -96,6 +97,7 @@ iproute2
 iputils
 jdownloader2
 jfsutils
+jpegoptim
 kaccounts-providers
 kamera
 kde-gtk-config
@@ -119,7 +121,6 @@ ksystemlog
 kwallet-pam
 kwayland-integration
 kwin
-kwin-bismuth
 kwrited
 latte-dock
 lazygit
@@ -197,12 +198,13 @@ nvidia-prime
 nvidia-utils
 nvtop
 obs-studio
-octave
 onlyoffice-desktopeditors
 openresolv
 openssh
+optipng
 os-prober
 p7zip
+p7zip-gui
 packagekit-qt5
 pacman
 pamac-cli
@@ -211,6 +213,7 @@ pamac-tray-icon-plasma
 papirus-folders
 papirus-icon-theme
 partitionmanager
+paru-bin
 patch
 pciutils
 perl
@@ -235,6 +238,7 @@ psmisc
 pulseaudio-bluetooth
 pulseaudio-ctl
 pulseaudio-zeroconf
+pulsemixer
 pyright
 python-pip
 python-pyqt5
@@ -295,6 +299,8 @@ usb_modeswitch
 usbutils
 util-linux
 vi
+vimv-git
+virtualbox
 wget
 which
 wireless-regdb
@@ -315,7 +321,6 @@ xorg-twm
 xorg-xinit
 xorg-xkill
 xz
-yay
 zathura
 zathura-pdf-mupdf
 zip

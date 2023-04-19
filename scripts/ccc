@@ -17,7 +17,7 @@ GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
 # Choosing .c file with Fzf
-choose="$(fd -d 1 -e c | fzf --cycle --reverse)" &&
+choose="$(fd -I -d 1 -e c | fzf --cycle --reverse)" &&
 cc "$choose" -o "${choose/.c/}" && # Compile C program with Gcc
 echo -e "👇$choose ${GREEN}Compiled successfully.✅${NOCOLOR}\n" &&
 

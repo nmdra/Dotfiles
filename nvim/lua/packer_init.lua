@@ -159,7 +159,6 @@ use {
 -- Indent line
 use {
   'lukas-reineke/indent-blankline.nvim',
-  config = "require('indent_blankline')",
   event = 'BufRead'
 }
 

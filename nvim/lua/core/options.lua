@@ -60,7 +60,7 @@ opt.synmaxcol = 240         -- Max column for syntax highlight
 opt.updatetime = 400        -- ms to wait for trigger an event
 opt.timeoutlen = 300        --
 -- vim.opt.spell = true
-opt.spelllang = { 'en','cjk' }
+opt.spelllang = { 'en' }
 --}}}
 -----------------------------------------------------------
 -- Startup
