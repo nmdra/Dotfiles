@@ -68,6 +68,7 @@ gawk
 gcc-libs
 gettext
 gimp
+git-delta
 github-cli
 glibc
 glibc-locales
@@ -84,6 +85,7 @@ gst-plugins-bad
 gst-plugins-base
 gst-plugins-good
 gst-plugins-ugly
+gwenview
 gzip
 haveged
 hplip
@@ -198,6 +200,7 @@ nvidia-prime
 nvidia-utils
 nvtop
 obs-studio
+okular
 onlyoffice-desktopeditors
 openresolv
 openssh
@@ -261,13 +264,13 @@ slop
 sof-firmware
 spectacle
 spectre-meltdown-checker
+spicetify-cli
 spotify
 squashfs-tools
 sshfs
 stow
 sudo
 sxhkd
-sxiv
 sysfsutils
 systemd
 systemd-fsck-silent
@@ -321,7 +324,5 @@ xorg-twm
 xorg-xinit
 xorg-xkill
 xz
-zathura
-zathura-pdf-mupdf
 zip
 zoxide

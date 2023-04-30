@@ -3,7 +3,7 @@
 # Simple Script for Compile & Run C programs
 # Shellcheck Passed.
 # Contributors: nimendra
-# Last Update: 2023-03-02 20:42
+# Last Update: 2023-04-23 16:08
 # github.com/nmdra
 # twitter.com/nimendra_
 # Installations👇
@@ -12,14 +12,23 @@
 # --------------------------------------------
 
 # Colors
-# RED='\033[0;31m'
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
 # Choosing .c file with Fzf
-choose="$(fd -I -d 1 -e c | fzf --cycle --reverse)" &&
-cc "$choose" -o "${choose/.c/}" && # Compile C program with Gcc
-echo -e "👇$choose ${GREEN}Compiled successfully.✅${NOCOLOR}\n" &&
+choose="$(fd -I -d 1 -e c | fzf --cycle --reverse --preview 'bat --color=always --style=numbers --line-range=:500 {}')" &&
+
+math="$(grep --only-matching "math.h" "$choose")" # checking math.h header file
+
+if [[ "$math" == "math.h" ]]; then
+    echo -e "🟡 ${RED}math.h Found. Compiled with -lm option."
+    cc "$choose" -o "${choose/.c/}" -lm # if math.h available compile source code using -lm option
+else
+    cc "$choose" -o "${choose/.c/}" # Compile C program with Gcc
+fi
+
+echo -e "👇 $choose ${GREEN}Compiled successfully.✅${NOCOLOR}\n" &&
 
 # Run Compiled Program
 if [[ $1 == -b ]]; then
@@ -30,6 +39,4 @@ else
 fi
 
 # $choose%.* for Remove .c extesion
-
-
 
