@@ -23,15 +23,15 @@ require('plugins/other') --other configuration
 require('plugins/neoscroll') -- smooth scrolling plugin
 require('plugins/comment') --comment plugin
 require('plugins/toggleterm') -- Terminal
+require("indent_blankline").setup {
+    space_char_blankline = " ",
+    show_current_context = true,
+    show_current_context_start = true,
+}
 -- Themes
-
--- Onedark
--- require('plugins/onedark')
--- require('onedark').load()
-
 -- Tokyonight
 require('plugins/tokyonight')
 vim.cmd[[colorscheme tokyonight]]
 
 -- For Neovide
-vim.opt.guifont = { "JetBrainsMono Nerd Font", "h13" }
+-- vim.opt.guifont = { "JetBrainsMono Nerd Font", "h13" }

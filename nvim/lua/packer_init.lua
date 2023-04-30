@@ -38,7 +38,6 @@ use 'wbthomason/packer.nvim' -- packer can manage itself
 use 'lewis6991/impatient.nvim'
 
 -- colorschemes {{{
--- use 'navarasu/onedark.nvim'
 use 'folke/tokyonight.nvim'
 --}}}
 
@@ -67,7 +66,7 @@ use {
   'nvim-treesitter/nvim-treesitter',
   run = ':TSUpdate',
   -- event = 'BufRead',
-  config = 'require("treesitter")'
+  config = 'require("plugins/treesitter")'
 }
 
 use {
@@ -80,7 +79,6 @@ use {
 use 'hrsh7th/cmp-nvim-lsp'
 use 'hrsh7th/cmp-path'
 use 'hrsh7th/cmp-buffer'
--- use 'hrsh7th/cmp-cmdline'
 
 use 'L3MON4D3/LuaSnip'
 use {
@@ -98,8 +96,6 @@ use {
         { name = 'nvim_lsp' },
         { name = 'path' },
         { name = 'buffer' }
-        -- { name = 'cmdline' }
-        -- more sources
       },
     }
   end
@@ -153,14 +149,11 @@ use({
 use {
   'kyazdani42/nvim-tree.lua',
   cmd = "NvimTreeToggle",
-  config = "require('nvimtree')"
+  config = "require('plugins/nvimtree')"
 }
 
 -- Indent line
-use {
-  'lukas-reineke/indent-blankline.nvim',
-  event = 'BufRead'
-}
+use 'lukas-reineke/indent-blankline.nvim'
 
 -- neoscroll >> smooth scrolling plugin
 use 'karb94/neoscroll.nvim'
@@ -175,11 +168,11 @@ use {
   config = "require('plugins/toggleterm')"
 }
 
-use {
-  'NvChad/nvim-colorizer.lua',
-  cmd = "ColorizerToggle",
-  config = "require'colorizer'.setup()"
-}
+-- use {
+--   'NvChad/nvim-colorizer.lua',
+--   cmd = "ColorizerToggle",
+--   config = "require'colorizer'.setup()"
+-- }
 
 use {
   "folke/which-key.nvim",
