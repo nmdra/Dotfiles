@@ -18,7 +18,7 @@
 
 ## Preview
 
-![Desktop Preview](/desktop2023.jpg "Desktop Preview")
+![Desktop Preview](/desktop2023-May.jpg "Desktop Preview")
 
 ---
 
