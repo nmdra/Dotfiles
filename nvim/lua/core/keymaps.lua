@@ -61,7 +61,7 @@ map('n', '<leader>q', ':qa!<CR>')
 -----------------------------------------------------------
 
 -- NvimTree
-map('n', '<C-n>', ':NvimTreeToggle<CR>') -- open/close
+map('n', '<C-a>', ':NvimTreeToggle<CR>') -- open/close
 
 map('n', '<leader>f', ':FzfLua oldfiles<CR>') --Fzflua find
 map('n', '<C-t>', ':FzfLua<CR>') -- Fzflua

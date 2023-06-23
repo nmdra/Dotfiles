@@ -9,7 +9,6 @@ appimagelauncher
 ark
 atool
 audacious
-auto-cpufreq
 autoconf
 automake
 avahi
@@ -29,7 +28,6 @@ c-lolcat
 chaotic-keyring
 chaotic-mirrorlist
 cheese
-code
 coreutils
 cowsay
 cpupower
@@ -66,6 +64,7 @@ flex
 fzf
 gawk
 gcc-libs
+gdown
 gettext
 gimp
 git-delta
@@ -144,6 +143,7 @@ licenses
 linux-wifi-hotspot
 linux515
 linux515-nvidia
+localsend-bin
 logrotate
 lua-language-server
 lvm2
@@ -213,6 +213,7 @@ pacman
 pamac-cli
 pamac-gtk
 pamac-tray-icon-plasma
+pandoc-bin
 papirus-folders
 papirus-icon-theme
 partitionmanager
@@ -234,7 +235,6 @@ playerctl
 poppler-data
 powerdevil
 powertop
-preload
 procps-ng
 protonvpn-cli
 psmisc
@@ -304,6 +304,7 @@ util-linux
 vi
 vimv-git
 virtualbox
+visual-studio-code-bin
 wget
 which
 wireless-regdb
@@ -324,5 +325,6 @@ xorg-twm
 xorg-xinit
 xorg-xkill
 xz
+zellij
 zip
 zoxide

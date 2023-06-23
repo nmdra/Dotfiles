@@ -90,6 +90,7 @@ alias pacr='sudo pacman -R '
 alias v='nvim'
 alias convpn='protonvpn-cli connect'
 alias disvpn='protonvpn-cli disconnect'
+alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf "
 #}}}
 
 #FZF{{{
