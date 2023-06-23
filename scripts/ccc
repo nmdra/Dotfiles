@@ -17,7 +17,8 @@ GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
 # Choosing .c file with Fzf
-choose="$(fd -I -d 1 -e c | fzf --cycle --reverse --preview 'bat --color=always --style=numbers --line-range=:500 {}')" &&
+# choose="$(fd -I -d 1 -e c | fzf --cycle --reverse --preview 'bat --color=always --style=numbers --line-range=:500 {}')" &&
+choose="$(fd -I -d 1 -e c | fzf --cycle --reverse)" &&
 
 math="$(grep --only-matching "math.h" "$choose")" # checking math.h header file
 
@@ -35,8 +36,6 @@ if [[ $1 == -b ]]; then
     ./"${choose/.c/}"  # Run program
 else
    ./"${choose/.c/}" && rm "${choose/.c/}" # Run program & Remove Compiled program
-    # echo -e "${RED}Program doesn't exist 🤯${NOCOLOR}"
 fi
-
 # $choose%.* for Remove .c extesion
 
