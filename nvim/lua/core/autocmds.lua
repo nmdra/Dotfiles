@@ -84,3 +84,22 @@ autocmd('BufReadPost', {
     end
   end,
 })
+
+local cc_default_hi = vim.api.nvim_get_hl_by_name("ColorColumn", true)
+vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
+    callback = function()
+        local cc = tonumber(vim.api.nvim_win_get_option(0, "colorcolumn"))
+        if cc ~= nil then
+            local lines = vim.api.nvim_buf_get_lines(0, vim.fn.line "w0", vim.fn.line "w$", true)
+            local max_col = 0
+            for _, line in pairs(lines) do
+                max_col = math.max(max_col, vim.fn.strdisplaywidth(line))
+            end
+            if max_col <= cc then
+                vim.api.nvim_set_hl(0, "ColorColumn", { bg = "None" })
+            else
+                vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#16161e" })
+            end
+        end
+    end,
+})
