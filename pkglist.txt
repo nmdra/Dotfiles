@@ -87,7 +87,6 @@ gst-plugins-ugly
 gwenview
 gzip
 haveged
-hplip
 htop
 ibus-helakuru
 img2pdf
@@ -113,6 +112,7 @@ kimageformats
 kinfocenter
 kinit
 kio-extras
+kio-gdrive
 kmenuedit
 kscreen
 kscreenlocker
@@ -165,8 +165,10 @@ manjaro-release
 manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
 manjaro-system
+mariadb
 mdadm
 mediainfo
+megabasterd-bin
 megasync-bin
 memtest86+
 mesa-demos
@@ -178,10 +180,10 @@ mobile-broadband-provider-info
 modemmanager
 mpv
 mtpfs
+mysql-workbench
 nano
 nano-syntax-highlighting
 neofetch
-neovide
 neovim
 networkmanager
 networkmanager-l2tp
@@ -219,7 +221,9 @@ papirus-icon-theme
 partitionmanager
 paru-bin
 patch
+pavucontrol
 pciutils
+pdfsam
 perl
 perl-file-mimeinfo
 phonon-qt5-gstreamer
@@ -248,6 +252,8 @@ python-pyqt5
 qbittorrent
 qt5-imageformats
 qt5-virtualkeyboard
+rclone
+rclone-browser
 reiserfsprogs
 rlwrap
 rsync
@@ -325,6 +331,7 @@ xorg-twm
 xorg-xinit
 xorg-xkill
 xz
+yt-dlp
 zellij
 zip
 zoxide

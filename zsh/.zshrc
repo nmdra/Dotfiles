@@ -91,6 +91,7 @@ alias v='nvim'
 alias convpn='protonvpn-cli connect'
 alias disvpn='protonvpn-cli disconnect'
 alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf "
+alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
 #}}}
 
 #FZF{{{
