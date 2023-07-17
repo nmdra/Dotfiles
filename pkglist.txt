@@ -88,6 +88,7 @@ gwenview
 gzip
 haveged
 htop
+hugo
 ibus-helakuru
 img2pdf
 inetutils
@@ -303,6 +304,7 @@ udiskie
 udisks2
 ueberzug
 unarchiver
+ungoogled-chromium-bin
 unzip
 usb_modeswitch
 usbutils

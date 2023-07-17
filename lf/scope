@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# File preview handler for lf.
+File preview handler for lf.
 
 set -C -f
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}"
@@ -42,4 +42,5 @@ case "$(file --dereference --brief --mime-type -- "$1")" in
 	application/pgp-encrypted) gpg -d -- "$1" ;;
 esac
 exit 1
+
 

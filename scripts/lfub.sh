@@ -22,3 +22,6 @@ else
 	trap cleanup HUP INT QUIT TERM PWR EXIT
 	lf "$@" 3>&-
 fi
+
+
+
