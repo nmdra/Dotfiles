@@ -1,12 +1,10 @@
------------------------------------------------------------
--- Autocommand functions
------------------------------------------------------------
-
 -- Define autocommands with Lua APIs
 -- See: h:api-autocmd, h:augroup
 
 local augroup = vim.api.nvim_create_augroup   -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
+
+-- General settings:
 
 -- Highlight on yank
 augroup('YankHighlight', { clear = true })
@@ -19,21 +17,19 @@ autocmd('TextYankPost', {
 
 -- Remove whitespace on save
 autocmd('BufWritePre', {
-  pattern = '*',
+  pattern = '',
   command = ":%s/\\s\\+$//e"
 })
 
 -- Don't auto commenting new lines
 autocmd('BufEnter', {
-  pattern = '*',
+  pattern = '',
   command = 'set fo-=c fo-=r fo-=o'
 })
 
--- autocmd('BufEnter', {
---   pattern = '*.sh',
---   command = 'LspStop'
--- })
 -- Settings for filetypes:
+--------------------------
+
 -- Disable line length marker
 augroup('setLineLength', { clear = true })
 autocmd('Filetype', {
@@ -52,29 +48,13 @@ autocmd('Filetype', {
   command = 'setlocal shiftwidth=2 tabstop=2'
 })
 
--- Terminal settings:
--- Open a Terminal on the right tab
-autocmd('CmdlineEnter', {
-  command = 'command! Term :botright vsplit term://$SHELL'
-})
-
--- Enter insert mode when switching to terminal
-autocmd('TermOpen', {
-  command = 'setlocal listchars= nonumber norelativenumber nocursorline',
-})
-
-autocmd('TermOpen', {
-  pattern = '*',
-  command = 'startinsert'
-})
-
 -- Close terminal buffer on process exit
 autocmd('BufLeave', {
   pattern = 'term://*',
   command = 'stopinsert'
 })
 
---automatically jump to the last place you’ve visited in a file before exit
+-- automatically jump to the last place you’ve visited in a file before exit
 autocmd('BufReadPost', {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -84,6 +64,8 @@ autocmd('BufReadPost', {
     end
   end,
 })
+
+-- Colorcolumn
 
 local cc_default_hi = vim.api.nvim_get_hl_by_name("ColorColumn", true)
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {

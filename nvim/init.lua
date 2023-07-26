@@ -1,37 +1,21 @@
 --[[
-Name: init.lua
-Contributors: nimendra
-Last Update: 2022-10-09 19:58
------------------------------
-> github.com/NMDRA
-> twitter.com/nimendra_
-=============================
+This Configuration Based on Neovim-Lua by brainfucksec,
+Website: https://github.com/brainfucksec/neovim-lua
 --]]
 
-require('impatient') -- speedup neovim loading
-require'impatient'.enable_profile() -- impatient report enable
-
-require('core/options') --neovim options
-require('packer_init') -- packer.nvim
-require('core/autocmds') --AuotoCommands
-require('core/keymaps') --Keymappings
-require('plugins/nvim-cmp') -- neovim autocomplete
-require('plugins/nvim-lspconfig') --LSP configuration
-require('plugins/fzf-lua') -- fzf plugin written in lua
+-- Import Lua modules
+require('core/lazy')
+require('core/autocmds')
+require('core/keymaps')
 require('plugins/lualine') -- statusline config
-require('plugins/other') --other configuration
-require('plugins/neoscroll') -- smooth scrolling plugin
+require('core/options')
+require('lsp/lspconfig')
+require('plugins/nvim-tree')
+require('plugins/nvim-cmp')
+require('plugins/nvim-treesitter')
 require('plugins/comment') --comment plugin
-require('plugins/toggleterm') -- Terminal
-require("indent_blankline").setup {
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
-}
--- Themes
--- Tokyonight
 require('plugins/tokyonight')
 vim.cmd[[colorscheme tokyonight]]
 
--- For Neovide
--- vim.opt.guifont = { "JetBrainsMono Nerd Font", "h13" }
+require('plugins/indent-blankline')
+require('plugins/toggleterm')
