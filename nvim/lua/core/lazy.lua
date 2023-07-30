@@ -79,9 +79,6 @@ lazy.setup({
     -- Treesitter
     { 'nvim-treesitter/nvim-treesitter',    build = ':TSUpdate' },
 
-    -- Rainbow Parentheses
-    { 'mrjones2014/nvim-ts-rainbow' },
-
     -- Indent line
     {
       'lukas-reineke/indent-blankline.nvim',
