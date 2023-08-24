@@ -18,7 +18,7 @@
 
 ## Preview
 
-![Desktop Preview](/desktop2023-Jul.webp "Desktop Preview")
+![Desktop Preview](/Desktop.webp "Desktop Preview")
 
 ---
 
