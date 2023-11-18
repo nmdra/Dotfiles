@@ -1,0 +1,37 @@
+---
+title: "Title"
+subtitle: "subtitle"
+author: "[Nimendra](https://nmdra.github.io)"
+date: "date"
+subject: "subject"
+keywords: [keywords]
+lang: "en"
+titlepage: true
+toc: true
+toc-own-page: true
+titlepage-rule-color: "360049"
+titlepage-background: "./images/background7.pdf"
+colorlinks: true
+toccolor: darkgray
+linkcolor: Cerulean
+footnotes-pretty: true
+listings-no-page-break: true
+header-left: "\\thetitle"
+header-right: "\\leftmark"
+footer-left: "\\theauthor"
+footer-right: "\\thepage"
+header-includes:
+- |
+  ```{=latex}
+  \usepackage{tcolorbox}
+
+  \newtcolorbox{info-box}{colback=cyan!5!white,arc=0pt,outer arc=0pt,colframe=cyan!60!black}
+  \newtcolorbox{warning-box}{colback=orange!5!white,arc=0pt,outer arc=0pt,colframe=orange!80!black}
+  \newtcolorbox{error-box}{colback=red!5!white,arc=0pt,outer arc=0pt,colframe=red!75!black}
+  ```
+pandoc-latex-environment:
+  tcolorbox: [box]
+  info-box: [info]
+  warning-box: [warning]
+  error-box: [error]
+---
