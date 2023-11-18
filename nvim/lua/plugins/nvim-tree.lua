@@ -1,7 +1,12 @@
+-----------------------------------------------------------
+-- File manager configuration file
+-----------------------------------------------------------
+
 -- Plugin: nvim-tree
 -- url: https://github.com/kyazdani42/nvim-tree.lua
--- Keybindings are defined in `core/keymaps.lua`:
 
+-- Keybindings are defined in `core/keymaps.lua`:
+-- https://github.com/kyazdani42/nvim-tree.lua#keybindings
 local status_ok, nvim_tree = pcall(require, 'nvim-tree')
 if not status_ok then
   return
@@ -24,25 +29,17 @@ nvim_tree.setup {
   reload_on_bufenter = false,
   respect_buf_cwd = false,
   on_attach = "disable",
-  remove_keymaps = false,
   select_prompts = false,
   view = {
     centralize_selection = false,
     cursorline = true,
     debounce_delay = 15,
     width = 34,
-    hide_root_folder = false,
     side = "left",
     preserve_window_proportions = false,
     number = false,
     relativenumber = false,
     signcolumn = "yes",
-    mappings = {
-      custom_only = false,
-      list = {
-        -- user mappings go here
-      },
-    },
     float = {
       enable = false,
       quit_on_focus_loss = true,

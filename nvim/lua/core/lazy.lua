@@ -53,8 +53,8 @@ lazy.setup({
 
     -- File explorer
     {
-      'nvim-tree/nvim-tree.lua',
-      dependencies = { 'nvim-tree/nvim-web-devicons' },
+      'kyazdani42/nvim-tree.lua',
+      dependencies = { 'kyazdani42/nvim-web-devicons' },
     },
 
     -- Terminal
@@ -80,10 +80,11 @@ lazy.setup({
     { 'nvim-treesitter/nvim-treesitter',    build = ':TSUpdate' },
 
     -- Indent line
-    {
-      'lukas-reineke/indent-blankline.nvim',
-      event = 'BufReadPre'
-    },
+    -- {
+    --   'lukas-reineke/indent-blankline.nvim',
+    --   event = 'BufReadPre'
+    -- },
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 
     -- Telescope
     {
@@ -102,7 +103,8 @@ lazy.setup({
 
     -- LSP
     { 'neovim/nvim-lspconfig' },
-
+    
+    { 'mfussenegger/nvim-jdtls'},
     -- Autocomplete
     {
       'hrsh7th/nvim-cmp',

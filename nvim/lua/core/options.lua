@@ -23,6 +23,7 @@ opt.linebreak = true        -- Wrap on word boundary
 opt.termguicolors = true    -- Enable 24-bit RGB colors
 opt.laststatus=3            -- Set global statusline
 opt.cursorline= true        -- cursorline
+-- opt.cmdheight=0
 -- opt.list = true
 -- opt.listchars:append "space:⋅"
 opt.winblend = 0
