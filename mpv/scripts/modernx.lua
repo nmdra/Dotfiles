@@ -191,7 +191,7 @@ local state = {
     osd = mp.create_osd_overlay("ass-events"),
     chapter_list = {},                      -- sorted by time
     lastvisibility = user_opts.visibility,  -- save last visibility on pause if showonpause
-    subpos = 100,                           -- last value of sub-pos set by the user
+    -- subpos = 100,                           -- last value of sub-pos set by the user
 }
 
 local window_control_box_width = 80
