@@ -29,7 +29,6 @@ echo "rsync Completed"
 
 rm -rf Documents/Dotfiles/mpv/watch_later
 rm -rf Documents/Dotfiles/.config/git
-rm -rf Documents/Dotfiles/nvim/plugin
 echo "removing unessentials"
 
 notify-send "📦 Config Sync" "Ready to git pull..."

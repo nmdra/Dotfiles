@@ -92,6 +92,7 @@ alias convpn='protonvpn-cli connect'
 alias disvpn='protonvpn-cli disconnect'
 alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf "
 alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
+alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extra'
 #}}}
 
 #FZF{{{
@@ -104,6 +105,9 @@ export FZF_ALT_C_COMMAND="fd -H |sed 's@\./@@'"
 export FZF_CTRL_T_COMMAND="fd |sed 's@^\./@@'"
 
 #}}}
+
+# preexec() { print -Pn "\e]0;$1%~\a" } # Command + Directory
+preexec() { print -Pn "\e]0;$1\a" } # Command
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.config/.oh-my-zsh/custom/.p10k.zsh ]] || source ~/.config/.oh-my-zsh/custom/.p10k.zsh

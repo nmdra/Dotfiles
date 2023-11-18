@@ -28,7 +28,7 @@ window:
     instance: Alacritty
     # General application class
     general: Alacritty
-  opacity: 1.0
+  opacity: 0.99
 scrolling:
   # Maximum number of lines in the scrollback buffer.
   # Specifying '0' will disable scrolling.

@@ -5,7 +5,7 @@ ostype="Linux"
 
 kernel="$(echo $(uname -r) | cut -d'-'  -f1-1)"
 #os="$(echo $(uname -r) | cut -c 11-17)"
-version="$(cat /etc/lsb-release | grep DISTRIB_RELEASE |cut -c 17-24)"
+version="$(cat /etc/lsb-release | grep DISTRIB_RELEASE |cut -c 18-23)"
 
 uptime="$(echo $(uptime -p) | cut -c 4-| sed {s/hours/H/} |sed {s/minutes/Mins/}| sed {s/hour/H/})"
 
@@ -33,7 +33,7 @@ case $ostype in
 				MemFree|Buffers|Cached|SReclaimable) mem_used=$((mem_used - val));;
 			esac
 		done < /proc/meminfo
-		mem_used=$((mem_used / 1024)) 
+		mem_used=$((mem_used / 1024))
 		mem_full=$((mem_full / 1024));;
 esac
 memstat="${mem_used}/${mem_full} MB"
@@ -67,5 +67,5 @@ c5="${reset}${red}"
 cat <<EOF
  	${yellow} ${blue} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${green} ${magenta} ${cyan} ${red} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${red} ${green} ${red} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${reset}
  	  ${ic} ${cyan}${version}${reset} ${lc} ${c2}${kernel}${reset} ${lc} ${c1}${RAM}${memstat}${reset} ${lc} ${ic}${packages}${reset} ${lc}  ${hn}${uptime}${reset}
- 	${yellow} ${blue} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${green} ${magenta} ${cyan} ${red} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${red} ${green} ${red} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${reset} 
+ 	${yellow} ${blue} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${green} ${magenta} ${cyan} ${red} ${magenta} ${cyan} ${red} ${green} ${red} ${yellow} ${red} ${green} ${red} ${cyan} ${red} ${green} ${red} ${yellow} ${green} ${blue} ${reset}
 EOF
