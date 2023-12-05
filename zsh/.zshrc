@@ -63,7 +63,7 @@ export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 # export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+# export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export ERRFILE="$XDG_CACHE_HOME"/X11/xsession-errorst
 
 export GTK_IM_MODULE=ibus
@@ -114,3 +114,4 @@ preexec() { print -Pn "\e]0;$1\a" } # Command
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+

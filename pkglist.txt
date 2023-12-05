@@ -5,7 +5,6 @@ alacritty
 alsa-firmware
 alsa-utils
 android-tools
-anki-official-binary-bundle
 appimagelauncher
 ark
 atool
@@ -50,7 +49,6 @@ dolphin
 dosfstools
 downgrade
 e2fsprogs
-eclipse-java
 ecryptfs-utils
 efibootmgr
 envycontrol
@@ -86,6 +84,7 @@ go
 gopls
 gparted
 grep
+grsync
 grub
 grub-btrfs
 grub-theme-manjaro
@@ -164,6 +163,8 @@ licenses
 linux-wifi-hotspot
 linux515
 linux515-nvidia
+linux61
+linux61-nvidia
 logrotate
 lua-language-server
 lvm2
@@ -289,6 +290,7 @@ shadow
 shellcheck-bin
 slop
 sof-firmware
+spaceship-prompt
 spectacle
 spectre-meltdown-checker
 squashfs-tools
@@ -336,7 +338,6 @@ wget
 which
 wireless-regdb
 wpa_supplicant
-xampp
 xclip
 xdg-desktop-portal-kde
 xdg-user-dirs
@@ -357,5 +358,4 @@ yt-dlp
 zathura
 zathura-pdf-mupdf
 zip
-zoom
 zoxide

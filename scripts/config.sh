@@ -24,11 +24,13 @@ rsync -r ~/.config/sxhkd ~/Documents/Dotfiles/other
 rsync -r .config/nvim Documents/Dotfiles
 rsync -r .config/mpv ~/Documents/Dotfiles
 rsync .zshrc ~/Documents/Dotfiles/zsh
+rsync .ideavimrc ~/Documents/Dotfiles/other
 
 echo "rsync Completed"
 
 rm -rf Documents/Dotfiles/mpv/watch_later
 rm -rf Documents/Dotfiles/.config/git
+rm -r Documents/Dotfiles/nvim/lazy-lock.json
 echo "removing unessentials"
 
 notify-send "📦 Config Sync" "Ready to git pull..."
