@@ -1,0 +1,12 @@
+#!/bin/bash
+
+selection="$(fd --extension=md | fzf --height 75% --cycle --reverse)"
+
+docker \
+    run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) \
+    pandoc/extra \
+    --from markdown \
+    --template eisvogel \
+    --filter pandoc-latex-environment \
+    --listings \
+    -o "${selection/.md/}".pdf "$selection" 
