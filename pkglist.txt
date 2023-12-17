@@ -27,6 +27,7 @@ btop
 btrfs-progs
 bzip2
 c-lolcat
+calf
 chaotic-keyring
 chaotic-mirrorlist
 cheese
@@ -70,7 +71,6 @@ fzf
 gawk
 gcc-libs
 gdb
-gdown
 gettext
 gimp
 git-delta
@@ -80,8 +80,6 @@ glibc
 glibc-locales
 glow
 gnome-disk-utility
-go
-gopls
 gparted
 grep
 grsync
@@ -120,9 +118,8 @@ kdeconnect
 kdegraphics-thumbnailers
 kdenetwork-filesharing
 kdeplasma-addons
-keysmith
 kfind
-kgamma5
+kgamma
 khotkeys
 kimageformats5
 kinfocenter
@@ -166,6 +163,7 @@ linux515-nvidia
 linux61
 linux61-nvidia
 logrotate
+lsp-plugins
 lua-language-server
 lvm2
 m4
@@ -187,6 +185,7 @@ manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
 manjaro-system
 mariadb
+mda.lv2
 mdadm
 mediainfo
 megasync-bin
@@ -225,6 +224,7 @@ nvtop
 obs-studio
 okular
 onlyoffice-desktopeditors
+openjdk-doc
 openresolv
 openssh
 optipng
@@ -266,6 +266,7 @@ psmisc
 pulseaudio-bluetooth
 pulseaudio-ctl
 pulseaudio-zeroconf
+pulseeffects-legacy
 pulsemixer
 pyright
 python-pip
@@ -290,7 +291,6 @@ shadow
 shellcheck-bin
 slop
 sof-firmware
-spaceship-prompt
 spectacle
 spectre-meltdown-checker
 squashfs-tools
@@ -355,7 +355,9 @@ xorg-xinit
 xorg-xkill
 xz
 yt-dlp
+zam-plugins-lv2
 zathura
 zathura-pdf-mupdf
 zip
 zoxide
+zram-generator
