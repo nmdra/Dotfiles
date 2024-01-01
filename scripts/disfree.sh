@@ -6,25 +6,25 @@
 
     # grep -Fvf ~/.local/bin/whitelist hosts2 > hosts
 
-link="https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/"
-if [[ "$1" == "-on" ]]; then
+choice="${1,,}"
+
+if [[ $choice == "-on" ]]; then
 
     sudo cp ~/.cache/dison /etc/hosts &&
 
     notify-send -t 3000 -i face-smile  "HOST File Updated" "Distractive sites Blocked."
 
-elif [[ "$1" == "-off" ]]; then
+elif [[ $choice == "-off" ]]; then
 
     sudo cp ~/.cache/disoff /etc/hosts &&
 
     notify-send -t 3000 -i face-smile  "HOST File Updated" "Distractive sites Unblocked"
 
-elif [[ "$1" == "-u" ]]; then
-
-    curl "$link"fakenews-gambling-porn-social/hosts --output ~/.cache/dison &&
-    curl "$link"fakenews-gambling-porn/hosts --output ~/.cache/disoff
+elif [[ $choice == "-u" ]]; then
+    curl https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts --output ~/.cache/dison &&
+    curl https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling-porn/hosts --output ~/.cache/disoff
 
 else
-    printf "%s\n%s\n%s\n" "-on    Turn off Distractive Sites" "-off   Turn on Distractive Sites" "-u     Update host file List"
+    printf "%s\n%s\n%s\n" "-On    Turn off Distractive Sites" "-Off   Turn on Distractive Sites" "-U     Update host file List"
 
 fi
