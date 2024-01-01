@@ -32,6 +32,7 @@ chaotic-keyring
 chaotic-mirrorlist
 cheese
 cloc
+copyq
 coreutils
 cowsay
 cpupower
@@ -232,6 +233,7 @@ os-prober
 p7zip
 p7zip-gui
 packagekit-qt5
+packettracer
 pacman
 pamac-cli
 pamac-gtk
@@ -273,7 +275,10 @@ python-pip
 python-pyqt5
 qbittorrent
 qt5-imageformats
+qt5-networkauth
+qt5-script
 qt5-virtualkeyboard
+qt5-websockets
 rclone
 rclone-browser
 reiserfsprogs
@@ -311,6 +316,7 @@ telegram-desktop
 terminus-font
 tex-gyre-fonts
 texinfo
+texlive-bin
 timeshift
 timeshift-autosnap-manjaro
 tlp
