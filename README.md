@@ -1,18 +1,24 @@
-# My (Messy) Linux Dotfiles
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=&duration=2500&pause=500&color=00F73B&center=true&vCenter=true&random=true&width=128&height=128&lines=Manjaro;KDE+Plasma;Neovim;MPV;LF+FM;Zathura;Alacritty" alt="Typing SVG" align="left" width="256px" height="128px" /></a>
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&pause=1000&color=0ED5F7&width=435&lines=Manjaro+KDE;Alacritty;Neovim+%2B+Tmux;LF+File+Manager;MPV)](https://git.io/typing-svg)
+### **Dotfiles**
+> ***my dotfiles for development on Manjaro KDE Plasma***
 
-### OS - Manjaro
-### DE - KDE/Plasma
-### Shell - Zsh
-### Terminal - Alacritty
-### File Manager - LF
-### Text Editor - Neovim
-### Web Browser - Firefox with Betterfox user.js
-### Document Viewer - Zathura
-### Media Player - MPV
-### Terminal & Neovim Theme - Tokyonight
-### Terminal & Neovim font - JetBrains Mono Nerd Font
+[![Distro](https://img.shields.io/badge/Distro-Manjaro-brightgreen.svg)](https://manjaro.org/)
+[![Editor](https://img.shields.io/badge/Editor-neovim-lightgreen.svg)](https://github.com/neovim/neovim)
+[![Shell](https://img.shields.io/badge/Shell-zsh-yellow.svg)](https://ohmyz.sh/)
+[![Terminal](https://img.shields.io/badge/Terminal-Alacritty-orange.svg)](https://github.com/alacritty/alacritty)
+[![Font](https://img.shields.io/badge/Font-JetBrainsMono-lightgrey.svg)](https://www.jetbrains.com/lp/mono/)
+
+- OS - Manjaro
+- DE - KDE/Plasma
+- Shell - Zsh 
+- Terminal - Alacritty
+- File Manager - LF
+- Text Editor - Neovim
+- Document Viewer - Zathura
+- Media Player - MPV
+- Terminal & Neovim Theme - Tokyonight
+- Terminal & Neovim font - JetBrains Mono Nerd Font
 
 ---
 
@@ -22,14 +28,8 @@
 
 ---
 
-- <a href="https://nimendra.bearblog.dev">Blog</a>
-
-- <a href="https://gitlab.com/nimendra_">Gitlab</a>
-
-- <a href="https://github.com/nmdra">Github</a>
-
-- <a href="https://twitter.com/nimendra_">Twitter</a>
-![Twitter Follow](https://img.shields.io/twitter/follow/nimendra_?logo=twitter&style=for-the-badge)
-
-- <a href="https://reddit.com/u/Nimendra">Reddit</a>
-![Reddit User Karma](https://img.shields.io/reddit/user-karma/combined/Nimendra?logo=reddit&style=for-the-badge)
+<div align="center">
+  <a href="https://nmdra.github.io"> 🌎 nmdra.github.io</a> |
+  <a href="https://github.com/nmdra"> 👨‍💻 Github</a> |
+  <a href="https://twitter.com/nimendra_"> 🐦 Twitter</a>
+</div>
