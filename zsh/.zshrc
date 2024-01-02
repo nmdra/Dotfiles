@@ -27,6 +27,7 @@ plugins=(
     auto-notify
     you-should-use
     aliases
+    forgit
 )
 
 source $ZSH/oh-my-zsh.sh

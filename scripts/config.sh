@@ -16,7 +16,7 @@ rsync .xinitrc Documents/Dotfiles/other
 rsync .config/tmux/tmux.conf Documents/Dotfiles/tmux
 rsync -r .local/bin/*.sh Documents/Dotfiles/scripts
 rsync .local/bin/ccc Documents/Dotfiles/scripts
-rsync -r ~/.config/alacritty/alacritty.yml ~/Documents/Dotfiles/alacritty/
+rsync -r ~/.config/alacritty/alacritty.toml ~/Documents/Dotfiles/alacritty/
 rsync -r .config/zathura Documents/Dotfiles/other
 rsync -r .config/lf Documents/Dotfiles
 rsync -r .config/oh-my-bash Documents/Dotfiles/bash
