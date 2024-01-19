@@ -21,6 +21,7 @@ bat
 bison
 bleachbit
 bluedevil
+borg
 brave-browser
 breeze-gtk
 btop
@@ -38,6 +39,7 @@ cowsay
 cpupower
 cronie
 cryptsetup
+delve
 device-mapper
 dhclient
 dhcpcd
@@ -81,6 +83,8 @@ glibc
 glibc-locales
 glow
 gnome-disk-utility
+go
+gopls
 gparted
 grep
 grsync
@@ -185,7 +189,6 @@ manjaro-release
 manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
 manjaro-system
-mariadb
 mda.lv2
 mdadm
 mediainfo
@@ -201,7 +204,6 @@ modemmanager
 mpv
 mpv-mpris
 mtpfs
-mysql-workbench
 nano
 nano-syntax-highlighting
 neofetch
@@ -271,7 +273,9 @@ pulseaudio-zeroconf
 pulseeffects-legacy
 pulsemixer
 pyright
+python-llfuse
 python-pip
+python-pymupdf
 python-pyqt5
 qbittorrent
 qt5-imageformats
@@ -298,6 +302,7 @@ slop
 sof-firmware
 spectacle
 spectre-meltdown-checker
+spotify
 squashfs-tools
 sshfs
 stacer
@@ -340,6 +345,7 @@ util-linux
 vi
 vimv-git
 visual-studio-code-bin
+vlc
 wget
 which
 wireless-regdb
