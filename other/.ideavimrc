@@ -28,7 +28,7 @@ Plug 'tpope/vim-commentary'
 set highlightedyank
 set which-key
 
-set timeoutlen=1000
+set timeoutlen=500
 set clipboard+=unnamed
 set ignorecase
 set smartcase

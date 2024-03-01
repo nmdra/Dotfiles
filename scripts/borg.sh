@@ -15,22 +15,23 @@ info "Starting backup"
 # Backup the most important directories into an archive named after
 # the machine this script is currently running on:
 
-borg create                                 \
-    --verbose                               \
-    --filter AME                            \
-    --progress                              \
-    --stats                                 \
-    --show-rc                               \
-    --compression zstd,11                   \
-    --exclude-caches                        \
-    --exclude '/home/nimendra/.cache/*'     \
-    --exclude '/home/nimendra/Videos/*'       \
-    --exclude '/home/nimendra/Downloads/Torrent/*'    \
-    --exclude '/home/nimendra/Documents/Y2S1/*' \
-    --exclude '/home/nimendra/Desktop/*'    \
-    --exclude '/home/nimendra/Music/*'      \
-                                            \
-    ::'{hostname}-{now}'                    \
+borg create                                         \
+    --verbose                                       \
+    --filter AME                                    \
+    --progress                                      \
+    --stats                                         \
+    --show-rc                                       \
+    --compression zstd,11                           \
+    --exclude-caches                                \
+    --exclude '/home/nimendra/.cache/*'             \
+    --exclude '/home/nimendra/Videos/ENT/*'         \
+    --exclude '/home/nimendra/Downloads/Torrent/*'  \
+    --exclude '/home/nimendra/Documents/Y2S1/*'     \
+    --exclude '/home/nimendra/Desktop/*'            \
+    --exclude '/home/nimendra/Music/music/*'        \
+    --exclude '/home/nimendra/Music/live/*'         \
+                                                    \
+    ::'{hostname}-{now}'                            \
     /home/nimendra/
 
 backup_exit=$?
@@ -46,9 +47,9 @@ borg prune                          \
     --list                          \
     --glob-archives '{hostname}-*'  \
     --show-rc                       \
-    --keep-daily    1               \
-    --keep-weekly   1               \
-    --keep-monthly  1
+    --keep-daily    7               \
+    --keep-weekly   4               \
+    --keep-monthly  6
 
 prune_exit=$?
 

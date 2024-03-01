@@ -21,6 +21,7 @@ rsync -r .config/zathura Documents/Dotfiles/other
 rsync -r .config/lf Documents/Dotfiles
 rsync -r .config/oh-my-bash Documents/Dotfiles/bash
 rsync -r ~/.config/sxhkd ~/Documents/Dotfiles/other
+rsync -r ~/.config/neofetch ~/Documents/Dotfiles/other
 rsync -r .config/nvim Documents/Dotfiles
 rsync -r .config/mpv ~/Documents/Dotfiles
 rsync .zshrc ~/Documents/Dotfiles/zsh

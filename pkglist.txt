@@ -5,6 +5,7 @@ alacritty
 alsa-firmware
 alsa-utils
 android-tools
+anki-bin
 appimagelauncher
 ark
 atool
@@ -21,6 +22,7 @@ bat
 bison
 bleachbit
 bluedevil
+bluez-utils
 borg
 brave-browser
 breeze-gtk
@@ -53,6 +55,7 @@ dolphin
 dosfstools
 downgrade
 e2fsprogs
+easyeffects
 ecryptfs-utils
 efibootmgr
 envycontrol
@@ -61,7 +64,6 @@ exfatprogs
 eza
 f2fs-tools
 fd
-ferdium-bin
 ffmpeg
 ffmpegthumbnailer
 ffmpegthumbs
@@ -69,12 +71,12 @@ file
 filesystem
 findutils
 flex
-font-manager
 fzf
 gawk
 gcc-libs
 gdb
 gettext
+ghostwriter
 gimp
 git-delta
 git-extras
@@ -106,7 +108,7 @@ ibus-helakuru
 img2pdf
 inetutils
 intel-ucode
-intellij-idea-community-edition
+intellij-idea-ultimate-edition
 inxi
 iproute2
 iputils
@@ -115,6 +117,7 @@ jdownloader2
 jdtls
 jfsutils
 jpegoptim
+jq
 kaccounts-providers
 kamera
 kcharselect
@@ -143,7 +146,6 @@ kwallet-pam
 kwayland-integration
 kwin
 kwrited
-latte-dock
 lazydocker
 lazygit
 less
@@ -184,7 +186,7 @@ manjaro-grub-theme-blurred
 manjaro-hello
 manjaro-hotfixes
 manjaro-kde-settings
-manjaro-pulse
+manjaro-pipewire
 manjaro-release
 manjaro-settings-manager-kcm
 manjaro-settings-manager-knotifier
@@ -263,14 +265,12 @@ plasma-systemmonitor
 plasma-workspace
 playerctl
 poppler-data
+postman-bin
 powerdevil
 powertop
 procps-ng
 psmisc
-pulseaudio-bluetooth
 pulseaudio-ctl
-pulseaudio-zeroconf
-pulseeffects-legacy
 pulsemixer
 pyright
 python-llfuse
@@ -284,7 +284,6 @@ qt5-script
 qt5-virtualkeyboard
 qt5-websockets
 rclone
-rclone-browser
 reiserfsprogs
 ripgrep
 rlwrap
@@ -308,7 +307,6 @@ sshfs
 stacer
 stow
 sudo
-sxhkd
 sysfsutils
 systemd
 systemd-fsck-silent
@@ -317,11 +315,13 @@ systemd-sysvcompat
 systemsettings
 tar
 tealdeer
+teams-for-linux
 telegram-desktop
 terminus-font
 tex-gyre-fonts
 texinfo
 texlive-bin
+thunderbird
 timeshift
 timeshift-autosnap-manjaro
 tlp
@@ -349,6 +349,7 @@ vlc
 wget
 which
 wireless-regdb
+wireplumber
 wpa_supplicant
 xclip
 xdg-desktop-portal-kde
@@ -368,8 +369,7 @@ xorg-xkill
 xz
 yt-dlp
 zam-plugins-lv2
-zathura
-zathura-pdf-mupdf
+zapzap
 zip
 zoxide
 zram-generator
