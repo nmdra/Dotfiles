@@ -1,9 +1,15 @@
 #!/bin/bash
 
-selection="$(fd --extension=md | fzf --height 75% --cycle --reverse)"
+if [ -n "$1" ]; then
+    selection="$1"
+else
+    selection="$(fd --extension=md | fzf --height 75% --cycle --reverse)"
+fi
+
+[[ "$selection" != *.md ]] && { echo "The selected file is not a Markdown file."; exit 1; }
 
 docker \
-    run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) \
+    run --rm -v "$(pwd):/data" -u "$(id -u)":"$(id -g)" \
     pandoc/extra \
     --from markdown \
     --template eisvogel \
