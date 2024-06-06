@@ -22,8 +22,6 @@ else
   require('plugins/nvim-cmp')
   require('plugins/nvim-treesitter')
   require('plugins/comment') --comment plugin
-  require('plugins/tokyonight')
-  vim.cmd[[colorscheme tokyonight]]
 
   require('plugins/indent-blankline')
   require('plugins/toggleterm')

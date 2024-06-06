@@ -25,11 +25,24 @@ end
 lazy.setup({
   spec = {
     -- Colorscheme:
+    -- {
+    --   "folke/tokyonight.nvim",
+    --   lazy = false,
+    --   priority = 1000,
+    --   opts = {},
+    -- },
+
     {
-      "folke/tokyonight.nvim",
-      lazy = false,
-      priority = 1000,
-      opts = {},
+      "catppuccin/nvim",
+      lazy = true,
+      name = "catppuccin",
+    },
+
+    {
+      "LazyVim/LazyVim",
+      opts = {
+        colorscheme = "catppuccin",
+      },
     },
 
     -- Icons
@@ -101,10 +114,11 @@ lazy.setup({
       end
     },
 
+    { 'wakatime/vim-wakatime', lazy = false },
     -- LSP
     { 'neovim/nvim-lspconfig' },
     
-    { 'mfussenegger/nvim-jdtls'},
+    -- { 'mfussenegger/nvim-jdtls'},
     -- Autocomplete
     {
       'hrsh7th/nvim-cmp',
@@ -121,4 +135,6 @@ lazy.setup({
       },
     },
   },
+  
+	opts
 })
