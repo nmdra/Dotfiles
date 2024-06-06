@@ -28,11 +28,13 @@ plugins=(
     you-should-use
     aliases
     forgit
+    fzf-tab
 )
 
 source $ZSH/oh-my-zsh.sh
 
 eval "$(zoxide init zsh)"
+# eval "$(zoxide init --cmd cd zsh)"
 
 # User configuration
 
@@ -98,7 +100,10 @@ alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extr
 #}}}
 
 #FZF{{{
-export FZF_DEFAULT_OPTS='--color=fg:#a0a8cd,bg:#11121d,hl:#f7768e --color=fg+:#f8f8f2,bg+:#44475a,hl+:#f7768e --color=info:#ffb86c,prompt:#50fa7b,pointer:#7aa2f7 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4 --height 85% --border=rounded'
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
 export FZF_DEFAULT_COMMAND="fd -H |sed 's@^\./@@'"
 
@@ -107,6 +112,16 @@ export FZF_ALT_C_COMMAND="fd -H |sed 's@\./@@'"
 export FZF_CTRL_T_COMMAND="fd |sed 's@^\./@@'"
 
 #}}}
+
+# fzf-tab
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# preview directory's content with eza when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
 # preexec() { print -Pn "\e]0;$1%~\a" } # Command + Directory
 preexec() { print -Pn "\e]0;$1\a" } # Command
