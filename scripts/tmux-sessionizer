@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Source:- https://github.com/brunobmello25/dotfiles/blob/main/bin%2F.local%2Fscripts%2Ftmux-sessionizer
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(fd --type d --max-depth 1 --min-depth 1 . ~/Documents/Project | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+selected_name=$(basename "$selected" | tr . _)
+tmux_running=$(pgrep tmux)
+
+# OK - tmux is not running
+if [[ -z $tmux_running ]]; then
+    tmux new-session -s $selected_name -c "$selected"
+    exit 0
+fi
+
+# OK - tmux is running but client is not attached, session with selected_name does not exist
+if [[ -z $TMUX ]] && ! tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux new-session -s $selected_name -c "$selected"
+    tmux a -t $selected_name
+    exit 0
+fi
+
+# OK - tmux is running but client is not attached, session with selected_name exists
+if [[ -z $TMUX ]] && tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux a -t $selected_name
+    exit 0
+fi
+
+# OK - tmux is running and client is attached, session with selected_name does not exist
+if [[ ! -z $TMUX ]] && ! tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux new-session -ds $selected_name -c "$selected"
+    tmux switch-client -t $selected_name
+    exit 0
+fi
+
+# OK - tmux is running and client is attached, session with selected_name exists
+if [[ ! -z $TMUX ]] && tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux switch-client -t $selected_name
+    exit 0
+fi
