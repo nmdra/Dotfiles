@@ -117,7 +117,7 @@ style = "Block"
 TERM = "xterm-256color"
 
 [font]
-size = 13.5
+size = 12.5
 
 [font.bold]
 family = "JetBrainsMono Nerd Font"
@@ -241,3 +241,8 @@ lines = 30
 [window.padding]
 x = 2
 y = 0
+
+# [shell]
+# program = "/bin/zsh"
+# args = ["-l", "-c", "tmux attach || tmux"]
+

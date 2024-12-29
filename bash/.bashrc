@@ -104,3 +104,6 @@ shopt -s autocd
 
 # Bookmark & betercd Script
 source "$HOME"/.local/bin/bmark.sh
+
+PATH=~/.console-ninja/.bin:$PATH
+complete -C /usr/bin/terraform terraform

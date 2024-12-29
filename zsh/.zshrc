@@ -29,6 +29,7 @@ plugins=(
     aliases
     forgit
     fzf-tab
+    golang
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -65,7 +66,7 @@ export ANDROID_HOME="$XDG_DATA_HOME"/android
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export GOPATH="$XDG_DATA_HOME"/go
+export GOPATH="$HOME"/go
 # export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 # export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export ERRFILE="$XDG_CACHE_HOME"/X11/xsession-errorst
@@ -80,6 +81,7 @@ export QT_IM_MODULE=ibus
 
 DATE=$(date -I)
 
+alias air='~/go/bin/air'
 alias ls='exa --icons'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 alias lsa='exa --all --icons --long --reverse --sort=modified'
@@ -94,9 +96,12 @@ alias pacr='sudo pacman -R '
 alias v='nvim'
 alias convpn='protonvpn-cli connect'
 alias disvpn='protonvpn-cli disconnect'
+alias mpvstream='mpv -ytdl-format=worst -cache=yes --cache-secs=5'
 alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf "
 alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
 alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extra'
+alias open='. open'
+alias kube='kubectl'
 #}}}
 
 #FZF{{{
@@ -109,7 +114,7 @@ export FZF_DEFAULT_COMMAND="fd -H |sed 's@^\./@@'"
 
 export FZF_ALT_C_COMMAND="fd -H |sed 's@\./@@'"
 
-export FZF_CTRL_T_COMMAND="fd |sed 's@^\./@@'"
+export FZF_CTRL_T_COMMAND="fd --follow |sed 's@^\./@@'"
 
 #}}}
 
@@ -132,3 +137,8 @@ preexec() { print -Pn "\e]0;$1\a" } # Command
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+
+PATH=~/.console-ninja/.bin:$PATH
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
