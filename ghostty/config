@@ -1,0 +1,4 @@
+theme = catppuccin-mocha
+font-family = JetBrainsMono Nerd Font
+font-size = 13
+gtk-titlebar = false
