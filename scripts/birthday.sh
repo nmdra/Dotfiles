@@ -60,38 +60,12 @@ if [ "$creation_date" == "-" ]; then
   creation_date="Unknown"
   root_age="Unavailable"
 else
-  # Get current date and creation date as year, month, day
-  year_creation=$(date -d "$creation_date" '+%Y')
-  month_creation=$(date -d "$creation_date" '+%-m')
-  day_creation=$(date -d "$creation_date" '+%-d')
-
-  year_current=$(date '+%Y')
-  month_current=$(date '+%-m')
-  day_current=$(date '+%-d')
-
-  # Calculate years difference
-  age_in_years=$((year_current - year_creation))
-  
-  # Calculate months difference
-  age_in_months=$((month_current - month_creation))
-  
-  # Calculate days difference
-  age_in_days=$((day_current - day_creation))
-  
-  # Adjust for negative days or months
-  if [ $age_in_days -lt 0 ]; then
-    previous_month=$(date -d "$current_date -1 month" '+%-m')
-    days_in_previous_month=$(date -d "$year_current-$previous_month-01 +1 month -1 day" '+%d')
-    age_in_days=$((age_in_days + days_in_previous_month))
-    age_in_months=$((age_in_months - 1))
-  fi
-
-  if [ $age_in_months -lt 0 ]; then
-    age_in_months=$((age_in_months + 12))
-    age_in_years=$((age_in_years - 1))
-  fi
-
-  root_age="${age_in_years} years, ${age_in_months} months, and ${age_in_days} days old"
+  current_date=$(date '+%Y-%m-%d')
+  age_in_days=$(( ( $(date -d "$current_date" '+%s') - $(date -d "$creation_date" '+%s') ) / 86400 ))
+  years=$(( age_in_days / 365 ))
+  months=$(( (age_in_days % 365) / 30 ))
+  days=$(( (age_in_days % 365) % 30 ))
+  root_age="${years} years, ${months} months, and ${days} days old"
 fi
 
 ## OUTPUT

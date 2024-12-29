@@ -26,8 +26,7 @@ borg create                                         \
     --exclude '/home/nimendra/.cache/*'             \
     --exclude '/home/nimendra/Videos/ENT/*'         \
     --exclude '/home/nimendra/Downloads/Torrent/*'  \
-    --exclude '/home/nimendra/Documents/Y2S1/*'     \
-    --exclude '/home/nimendra/Desktop/*'            \
+    --exclude '/home/nimendra/Documents/Y2S2/*'     \
     --exclude '/home/nimendra/Music/music/*'        \
     --exclude '/home/nimendra/Music/live/*'         \
                                                     \
@@ -47,9 +46,9 @@ borg prune                          \
     --list                          \
     --glob-archives '{hostname}-*'  \
     --show-rc                       \
-    --keep-daily    7               \
-    --keep-weekly   4               \
-    --keep-monthly  6
+    --keep-daily    5               \
+    --keep-weekly   3               \
+    --keep-monthly  4
 
 prune_exit=$?
 
@@ -74,3 +73,7 @@ else
 fi
 
 exit ${global_exit}
+
+
+
+# --exclude '/home/nimendra/Desktop/*'          \

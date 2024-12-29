@@ -1,9 +1,9 @@
 #!/bin/bash
-cat /etc/lsb-release > ~/Documents/Dotfiles/Sysinfo.txt
-uname -a > ~/Documents/Dotfiles/Sysinfo.txt
+cat /etc/lsb-release >~/Documents/Dotfiles/Sysinfo.txt
+uname -a >~/Documents/Dotfiles/Sysinfo.txt
 echo "sysinfo created"
 
-pacman -Qqe > Documents/Dotfiles/pkglist.txt
+pacman -Qqe >Documents/Dotfiles/pkglist.txt
 
 echo "package list created"
 
@@ -26,6 +26,7 @@ rsync -r .config/nvim Documents/Dotfiles
 rsync -r .config/mpv ~/Documents/Dotfiles
 rsync .zshrc ~/Documents/Dotfiles/zsh
 rsync .ideavimrc ~/Documents/Dotfiles/other
+rsync .config/ghostty/config ~/Documents/Dotfiles/ghostty/config
 
 echo "rsync Completed"
 
@@ -35,4 +36,3 @@ rm -r Documents/Dotfiles/nvim/lazy-lock.json
 echo "removing unessentials"
 
 notify-send "📦 Config Sync" "Ready to git pull..."
-
