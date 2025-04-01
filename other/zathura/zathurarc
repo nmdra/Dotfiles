@@ -1,12 +1,18 @@
 # General Settings
-set sandbox none
-set guioptions ""
+set guioptions "shv"
 set page-padding 1
 set adjust-open "width"
 set window-height 3000
 set window-width 3000
-set scroll-wrap "true"
-set scroll-page-aware "true"
+set scroll-wrap true
+set scroll-page-aware true
+set statusbar-home-tilde true
+set window-title-home-tilde true
+set statusbar-page-percent true
+set statusbar-basename true
+set incremental-search true
+set selection-clipboard "clipboard"
+set database "sqlite"
 
 # Notification Settings
 set notification-error-bg "rgba(242,229,188,1)"  # bg
@@ -54,12 +60,6 @@ set recolor-lightcolor "rgba(242,229,188,1)"  # bg
 set recolor-darkcolor "rgba(60,56,54,1)"  # fg
 set recolor "true"
 set recolor-keephue "true"  # keep original color
-
-# Search Settings
-set incremental-search "true"
-
-# Selection Clipboard
-set selection-clipboard Clipboard
 
 # Keybindings
 map r reload
