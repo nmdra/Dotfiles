@@ -30,7 +30,8 @@ plugins=(
     forgit
     fzf-tab
     golang
-)
+    kubectl
+  )
 
 source $ZSH/oh-my-zsh.sh
 
@@ -66,7 +67,7 @@ export ANDROID_HOME="$XDG_DATA_HOME"/android
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export GOPATH="$HOME"/go
+export PATH="$PATH:$(go env GOPATH)/bin"
 # export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 # export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export ERRFILE="$XDG_CACHE_HOME"/X11/xsession-errorst
@@ -101,7 +102,7 @@ alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --t
 alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
 alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extra'
 alias open='. open'
-alias kube='kubectl'
+# alias kube='kubectl'
 #}}}
 
 #FZF{{{
@@ -138,7 +139,12 @@ preexec() { print -Pn "\e]0;$1\a" } # Command
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-PATH=~/.console-ninja/.bin:$PATH
+
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
+
+# >>>> Vagrant command completion (start)
+fpath=(/opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/zsh $fpath)
+compinit
+# <<<<  Vagrant command completion (end)

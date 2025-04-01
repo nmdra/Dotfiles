@@ -8,8 +8,10 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
 LOG_FILE="/home/nime/backup_log.txt"
 DOCKER_CONTAINER="miniflux-db-1"
 DB_NAME="linkding"
+MINIFLUX_DB_NAME="miniflux"
 DB_USER="miniflux"
 PSQL_BACKUP_FILE="/home/nime/psql_backup.sql"
+MINIFLUX_BACKUP_FILE="/home/nime/miniflux_psql_backup.sql"
 LINKDING_BACKUP_FILE="/home/nime/linkding_backup.zip"
 COMBINED_ARCHIVE="/home/nime/linkding_backup.tar.gz"
 RCLONE_CONFIG_PATH="/home/nime/.config/rclone/rclone.conf"
@@ -36,6 +38,14 @@ log "INFO" "Starting backup process..."
 log "INFO" "Starting PostgreSQL backup for database '$DB_NAME'..."
 if docker exec -t "$DOCKER_CONTAINER" pg_dump -U "$DB_USER" -d "$DB_NAME" >"$PSQL_BACKUP_FILE"; then
   log "SUCCESS" "PostgreSQL backup completed: $PSQL_BACKUP_FILE"
+else
+  log "ERROR" "PostgreSQL backup failed."
+  exit 1
+fi
+
+log "INFO" "Starting PostgreSQL backup for database '$DB_NAME'..."
+if docker exec -t "$DOCKER_CONTAINER" pg_dump -U "$DB_USER" -d "$MINIFLUX_DB_NAME" >"$MINIFLUX_BACKUP_FILE"; then
+  log "SUCCESS" "PostgreSQL backup completed: $MINIFLUX_BACKUP_FILE"
 else
   log "ERROR" "PostgreSQL backup failed."
   exit 1

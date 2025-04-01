@@ -227,7 +227,7 @@ mods = "Shift"
 decorations = "full"
 dynamic_padding = true
 dynamic_title = true
-opacity = 0.99
+opacity = 0.98
 title = "Terminal"
 
 [window.class]

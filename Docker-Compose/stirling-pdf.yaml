@@ -1,0 +1,57 @@
+# NOTE: reverse proxy not required to run stirling pdf.    
+
+services:
+  traefik:
+    image: traefik:v3
+    container_name: traefik
+    command:
+      # EntryPoints
+      - --entrypoints.web.address=:80
+      # Enable Docker provider
+      - --providers.docker=true
+      - --providers.docker.network=traefik
+      - --providers.docker.exposedByDefault=false
+      # Enable the API (Dashboard)
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --log.level=INFO          # Set the log level (DEBUG, INFO, WARN, ERROR)
+      - --accesslog=true
+    ports:
+      - '80:80'   # HTTP entrypoint exposed on port 80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # Read-only access to Docker socket
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik-dashboard.rule=Host(`dash.localhost`)
+      - traefik.http.routers.traefik-dashboard.service=api@internal
+     # Middleware for handling 404 errors
+      - traefik.http.middlewares.error-to-dashboard.errors.status=404
+      - traefik.http.middlewares.error-to-dashboard.errors.service=api@internal
+      - traefik.http.middlewares.error-to-dashboard.errors.query=/
+      # Apply middleware globally to all routers
+      - traefik.http.routers.catchall.rule=PathPrefix(`/`)
+      - traefik.http.routers.catchall.middlewares=error-to-dashboard
+      - traefik.http.routers.catchall.service=api@internal
+
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest-ultra-lite
+    volumes:
+      - ~/StirlingPDF/trainingData:/usr/share/tessdata
+      - ~/StirlingPDF/extraConfigs:/configs
+      - ~/StirlingPDF/customFiles:/customFiles/
+      - ~/StirlingPDF/logs:/logs/
+      - ~/StirlingPDF/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - LANGS=en_GB
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.stirling-pdf.rule=Host(`pdf.localhost`)
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
