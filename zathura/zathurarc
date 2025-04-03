@@ -1,7 +1,7 @@
 # General Settings
 set guioptions "shv"
 set page-padding 1
-set adjust-open "width"
+set adjust-open "best-fit"
 set window-height 3000
 set window-width 3000
 set scroll-wrap true

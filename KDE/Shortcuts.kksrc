@@ -5,6 +5,10 @@ switch-to-activity-e31c3219-9873-4e10-bd85-8c5eb5c38b3e=
 New=Meta+Return
 _launch=
 
+[Custom Commands][net.local.alacritty.desktop]
+Exec=alacritty -t Pop-Up-Terminal -e tmux new-session -A -D -s Pop-Up
+Name=Pop Up Terminal
+
 [Custom Commands][net.local.playerctl-2.desktop]
 Exec=playerctl next
 Name=Playerctl-next
@@ -14,7 +18,7 @@ Exec=playerctl previous
 Name=Playerctl-previous
 
 [Custom Commands][net.local.playerctl.desktop]
-Exec=playerctl  --all-players play-pause
+Exec=playerctl --all-players play-pause
 Name=Playerctl-toggle
 
 [Custom Commands][xkill.desktop]
@@ -44,12 +48,12 @@ decrease_volume_small=Shift+Volume Down
 increase_microphone_volume=Microphone Volume Up
 increase_volume=Volume Up
 increase_volume_small=Shift+Volume Up
-mic_mute=Microphone Mute; Meta+Volume Mute
+mic_mute=Meta+Volume Mute; Microphone Mute
 mute=Volume Mute
 
 [ksmserver][Global Shortcuts]
 Halt Without Confirmation=
-Lock Session=Meta+L; Ctrl+Alt+L; Screensaver
+Lock Session=Meta+L; Screensaver; Ctrl+Alt+L
 Log Out=Ctrl+Alt+Del
 Log Out Without Confirmation=
 LogOut=
@@ -145,7 +149,11 @@ Walk Through Windows of Current Application Alternative (Reverse)=
 Window Above Other Windows=
 Window Below Other Windows=
 Window Close=Alt+Shift+Q
-Window Fullscreen=
+Window Custom Quick Tile Bottom=
+Window Custom Quick Tile Left=
+Window Custom Quick Tile Right=
+Window Custom Quick Tile Top=
+Window Fullscreen=Meta+Ctrl+F
 Window Grow Horizontal=
 Window Grow Vertical=
 Window Lower=
@@ -216,7 +224,7 @@ Window to Screen 5=
 Window to Screen 6=
 Window to Screen 7=
 view_actual_size=Meta+0
-view_zoom_in=Meta+=; Meta++
+view_zoom_in=Meta++; Meta+=
 view_zoom_out=Meta+-
 
 [mediacontrol][Global Shortcuts]
@@ -229,6 +237,9 @@ playpausemedia=Media Play
 previousmedia=Media Previous
 stopmedia=Media Stop
 
+[net.local.alacritty.desktop][Global Shortcuts]
+_launch=Ctrl+Shift+Return
+
 [net.local.playerctl-2.desktop][Global Shortcuts]
 _launch=Meta+N
 
@@ -238,12 +249,18 @@ _launch=Meta+B
 [net.local.playerctl.desktop][Global Shortcuts]
 _launch=Meta+P
 
+[org.kde.dolphin.desktop][Global Shortcuts]
+_launch=Ctrl+Alt+Shift+E
+
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=
 _launch=Meta
 
 [org.kde.kscreen.desktop][Global Shortcuts]
 ShowOSD=
+
+[org.kde.plasma-systemmonitor.desktop][Global Shortcuts]
+_launch=Meta+Esc
 
 [org.kde.plasma.emojier.desktop][Global Shortcuts]
 _launch=Meta+E
@@ -253,7 +270,7 @@ ActiveWindowScreenShot=Meta+Print
 CurrentMonitorScreenShot=
 FullScreenScreenShot=Print
 OpenWithoutScreenshot=
-RecordRegion=Meta+Shift+R; Meta+R
+RecordRegion=Meta+R; Meta+Shift+R
 RecordScreen=Meta+Alt+R
 RecordWindow=Meta+Ctrl+R
 RectangularRegionScreenShot=Meta+Shift+Print
@@ -313,6 +330,14 @@ stop current activity=
 switch to next activity=
 switch to previous activity=
 toggle do not disturb=
+
+[systemsettings.desktop][Global Shortcuts]
+_launch=Tools
+kcm-kscreen=
+kcm-lookandfeel=
+kcm-powerdevilprofilesconfig=
+kcm-screenlocker=
+kcm-users=
 
 [xkill.desktop][Global Shortcuts]
 _launch=Alt+F2

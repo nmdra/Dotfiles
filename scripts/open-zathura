@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Select a book or paper using fd and fzf
+files=$(fd --follow --type f --extension pdf --extension epub | fzf --height 75% --reverse --no-info --multi --prompt "Select Book/Paper  : ")
+
+# Check if a selection was made
+if [[ -n "$files" ]]; then
+  # Open each selected file
+  while IFS= read -r file; do
+    if [[ -f "$file" ]]; then
+      nohup zathura "$file" >/dev/null 2>&1 &
+      disown
+      echo "Opened file: $file"
+    else
+      echo "Unknown selection: $file"
+    fi
+  done <<<"$files"
+else
+  echo "No selection made."
+fi
