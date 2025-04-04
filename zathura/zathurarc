@@ -1,6 +1,6 @@
 # General Settings
 set guioptions "shv"
-set page-padding 1
+set page-padding 2
 set adjust-open "best-fit"
 set window-height 3000
 set window-width 3000
@@ -66,8 +66,15 @@ map r reload
 map R rotate
 map c recolor
 map p print
-map g goto top
+map g goto top 
+map <Return> goto
 map <C-b> feedkeys ":bmark "
 map u follow
-map <Return> toggle_presentation
-map [presentation] <Return> toggle_presentation
+map <C-f> toggle_presentation
+map [presentation] <C-f> toggle_presentation 
+
+# Index Mode
+# https://github.com/alezost/config/blob/master/zathura/zathurarc
+map [index] i toggle_index
+map [index] <Tab> navigate_index toggle
+map [index] <ShiftTab> navigate_index expand-all
