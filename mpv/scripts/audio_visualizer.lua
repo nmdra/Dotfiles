@@ -14,6 +14,7 @@ local opts = {
     -- showspectrum
     -- showcqtbar
     -- showwaves
+    -- showvolume
 
     quality = "medium",
     -- verylow
@@ -24,6 +25,10 @@ local opts = {
 
     height = 6,
     -- [4 .. 12]
+
+    forcewindow = true,
+    -- true (yes)       always run visualizer regardless of force-window settings
+    -- false (no)       does not run visualizer when force-window is no
 }
 
 -- key bindings
@@ -41,6 +46,7 @@ local visualizer_name_list = {
     "showspectrum",
     "showcqtbar",
     "showwaves",
+    "showvolume",
 }
 
 local axis_0 = "image/png;base64," ..
@@ -132,11 +138,7 @@ local axis_1 = "image/png;base64," ..
 local options = require 'mp.options'
 local msg     = require 'mp.msg'
 
-options.read_options(opts)
-opts.height = math.min(12, math.max(4, opts.height))
-opts.height = math.floor(opts.height)
-
-local function get_visualizer(name, quality, vtrack, albumart)
+local function get_visualizer(name, quality, vtrack)
     local w, h, fps
 
     if quality == "verylow" then
@@ -165,7 +167,7 @@ local function get_visualizer(name, quality, vtrack, albumart)
         local count = math.ceil(w * 180 / 1920 / fps)
 
         return "[aid1] asplit [ao]," ..
-            "afifo, aformat     = channel_layouts = stereo," ..
+            "aformat            = channel_layouts = stereo," ..
             "firequalizer       =" ..
                 "gain           = '1.4884e8 * f*f*f / (f*f + 424.36) / (f*f + 1.4884e8) / sqrt(f*f + 25122.25)':" ..
                 "scale          = linlin:" ..
@@ -192,7 +194,6 @@ local function get_visualizer(name, quality, vtrack, albumart)
 
     elseif name == "avectorscope" then
         return "[aid1] asplit [ao]," ..
-            "afifo," ..
             "aformat            =" ..
                 "sample_rates   = 192000," ..
             "avectorscope       =" ..
@@ -203,7 +204,6 @@ local function get_visualizer(name, quality, vtrack, albumart)
 
     elseif name == "showspectrum" then
         return "[aid1] asplit [ao]," ..
-            "afifo," ..
             "showspectrum       =" ..
                 "size           =" .. w .. "x" .. h .. ":" ..
                 "win_func       = blackman [vo]"
@@ -213,7 +213,7 @@ local function get_visualizer(name, quality, vtrack, albumart)
         local axis_h = math.ceil(w * 12 / 1920) * 4
 
         return "[aid1] asplit [ao]," ..
-            "afifo, aformat     = channel_layouts = stereo," ..
+            "aformat            = channel_layouts = stereo," ..
             "firequalizer       =" ..
                 "gain           = '1.4884e8 * f*f*f / (f*f + 424.36) / (f*f + 1.4884e8) / sqrt(f*f + 25122.25)':" ..
                 "scale          = linlin:" ..
@@ -248,21 +248,38 @@ local function get_visualizer(name, quality, vtrack, albumart)
 
     elseif name == "showwaves" then
         return "[aid1] asplit [ao]," ..
-            "afifo," ..
             "showwaves          =" ..
                 "size           =" .. w .. "x" .. h .. ":" ..
                 "r              =" .. fps .. ":" ..
                 "mode           = p2p," ..
             "format             = rgb0 [vo]"
+    elseif name == "showvolume" then
+        return "[aid1] asplit [ao]," ..
+            "showvolume          =" ..
+            "w                   =" .. w/2 .. ":" ..
+            "h                   =" .. h/8 .. ":" ..
+            "r                   =" .. 10 .. ":" ..
+            "m                   =p" .. ":" ..
+            "t                   =false" .. ":" ..
+            "f                   =0.8" .. ":" ..
+            "ds                  =log" .. ":" ..
+            "dm                  =1," ..
+            "format             = rgb0 [vo]"
     elseif name == "off" then
-        if vtrack > 0 or albumart > 0 then
+        local hasvideo = false
+        for id, track in ipairs(mp.get_property_native("track-list")) do
+            if track.type == "video" then
+                hasvideo = true
+                break
+            end
+        end
+        if hasvideo then
             return "[aid1] asetpts=PTS [ao]; [vid1] setpts=PTS [vo]"
         else
             return "[aid1] asetpts=PTS [ao];" ..
                 "color      =" ..
                     "c      = Black:" ..
-                    "s      =" .. w .. "x" .. h .. ":" ..
-                    "d      = 0.04," ..
+                    "s      =" .. w .. "x" .. h .. "," ..
                 "format     = yuv420p [vo]"
         end
     end
@@ -271,19 +288,19 @@ local function get_visualizer(name, quality, vtrack, albumart)
     return ""
 end
 
-local function select_visualizer(atrack, vtrack, albumart)
-    if opts.mode == "off" then
+local function select_visualizer(vtrack, atrack)
+    if atrack == nil or opts.mode == "off" then
         return ""
     elseif opts.mode == "force" then
-        return get_visualizer(opts.name, opts.quality, vtrack, albumart)
+        return get_visualizer(opts.name, opts.quality, vtrack)
     elseif opts.mode == "noalbumart" then
-        if albumart == 0 and vtrack == 0 then
-            return get_visualizer(opts.name, opts.quality, vtrack, albumart)
+        if vtrack == nil then
+            return get_visualizer(opts.name, opts.quality, vtrack)
         end
         return ""
     elseif opts.mode == "novideo" then
-        if vtrack == 0 then
-            return get_visualizer(opts.name, opts.quality, vtrack, albumart)
+        if vtrack == nil or vtrack.albumart then
+            return get_visualizer(opts.name, opts.quality, vtrack)
         end
         return ""
     end
@@ -294,30 +311,42 @@ end
 
 local function visualizer_hook()
     local count = mp.get_property_number("track-list/count", -1)
-    local atrack = 0
-    local vtrack = 0
-    local albumart = 0
     if count <= 0 then
         return
     end
-    for tr = 0,count-1 do
-        if mp.get_property("track-list/" .. tr .. "/type") == "audio" then
-            atrack = atrack + 1
-        else
-            if mp.get_property("track-list/" .. tr .. "/type") == "video" then
-                if mp.get_property("track-list/" .. tr .. "/albumart") == "yes" then
-                    albumart = 1
-                else
-                    vtrack = vtrack + 1
-                end
+
+    local atrack = mp.get_property_native("current-tracks/audio")
+    local vtrack = mp.get_property_native("current-tracks/video")
+
+    --no tracks selected (yet)
+    if atrack == nil and vtrack == nil then
+        for id, track in ipairs(mp.get_property_native("track-list")) do
+            if track.type == "video" and (vtrack == nil or vtrack.albumart == true) and mp.get_property("vid") ~= "no" then
+                vtrack = track
+            elseif track.type == "audio" then
+                atrack = track
             end
         end
     end
 
-    mp.set_property("options/lavfi-complex", select_visualizer(atrack, vtrack, albumart))
+    local lavfi = select_visualizer(vtrack, atrack)
+    --prevent endless loop
+    if lavfi ~= "" and lavfi ~= mp.get_property("lavfi-complex", "") then
+        mp.set_property("file-local-options/lavfi-complex", lavfi)
+    end
+end
+
+options.read_options(opts, nil, visualizer_hook)
+opts.height = math.min(12, math.max(4, opts.height))
+opts.height = math.floor(opts.height)
+
+if not opts.forcewindow and mp.get_property('force-window') == "no" then
+    return
 end
 
 mp.add_hook("on_preloaded", 50, visualizer_hook)
+mp.observe_property("current-tracks/audio", "native", visualizer_hook)
+mp.observe_property("current-tracks/video", "native", visualizer_hook)
 
 local function cycle_visualizer()
     local i, index = 1

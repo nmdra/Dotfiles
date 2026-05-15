@@ -1,7 +1,4 @@
--- Original script from https://github.com/occivink/mpv-scripts/blob/master/scripts/seek-to.lua
-
 local assdraw = require 'mp.assdraw'
-local utils = require 'mp.utils'
 local active = false
 local cursor_position = 1
 local time_scale = {60*60*10, 60*60, 60*10, 60, 10, 1, 0.1, 0.01, 0.001}
@@ -95,11 +92,13 @@ function seek_to()
 end
 
 function backspace()
+    if cursor_position ~= 9 or current_time[9] == 0 then
+        shift_cursor(true)
+    end
     if history[history_position][cursor_position] ~= 0 then
         copy_history_to_last()
         history[#history][cursor_position] = 0
     end
-    shift_cursor(true)
 end
 
 function history_move(up)
@@ -154,34 +153,5 @@ function set_inactive()
     active = false
 end
 
-function paste_timestamp()
-    -- get clipboard data
-    local clipboard = utils.subprocess({
-        args = { "powershell", "-Command", "Get-Clipboard", "-Raw" },
-        playback_only = false,
-        capture_stdout = true,
-        capture_stderr = true
-    })
-
-    -- error handling
-    if not clipboard.error then
-        timestamp = clipboard.stdout
-    else
-        msg.error("Error getting data from clipboard:")
-        msg.error("  stderr: " .. clipboard.stderr)
-        msg.error("  stdout: " .. clipboard.stdout)
-        return
-    end
-
-    -- find timestamp from clipboard
-    match = timestamp:match("%d?%d?:?%d%d:%d%d%.?%d*")
-
-    -- paste and seek to timestamp
-    if match ~= nil then
-        mp.osd_message("Timestamp pasted: " .. match)
-        mp.commandv("osd-bar", "seek", match, "absolute")
-    end
-end
-
 mp.add_key_binding(nil, "toggle-seeker", function() if active then set_inactive() else set_active() end end)
-mp.add_key_binding("ctrl+alt+v", "paste-timestamp", paste_timestamp)
+
