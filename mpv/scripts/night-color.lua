@@ -21,17 +21,16 @@ local function toggle_night_color()
     os.execute('qdbus org.kde.kglobalaccel /component/kwin org.kde.kglobalaccel.Component.invokeShortcut "Toggle Night Color"')
 end
 
--- Function to check if the current file is audio-only (thx to : https://github.com/CogentRedTester/mpv-scripts/blob/05aee333a232e858dc3e54f973edfe392cefe13b/music-mode.lua#L54)
+-- Function to check if the current file is audio-only
 local function is_audio_file()
     local track_list = mp.get_property_native("track-list")
+    if not track_list then return true end
     for _, track in ipairs(track_list) do
-        if track.type == "audio" then
-            return true
-        elseif not track.albumart and (track["demux-fps"] or 2) > 1 then
-            return false  -- Contains video track
+        if track.type == "video" and not track.albumart then
+            return false  -- Found a real video track
         end
     end
-    return true  -- Default to true if only audio tracks are found
+    return true  -- Only audio or album art found
 end
 
 -- Function to handle night color state when playback starts
