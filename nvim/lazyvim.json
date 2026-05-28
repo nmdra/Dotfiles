@@ -1,0 +1,16 @@
+{
+  "extras": [
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.lang.ansible",
+    "lazyvim.plugins.extras.lang.docker",
+    "lazyvim.plugins.extras.lang.go",
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.lang.terraform",
+    "lazyvim.plugins.extras.lang.yaml"
+  ],
+  "install_version": 7,
+  "news": {
+    "NEWS.md": "11866"
+  },
+  "version": 8
+}
