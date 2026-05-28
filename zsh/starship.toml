@@ -5,7 +5,9 @@ command_timeout = 1000
  
 # p10k lean style — left prompt: context/dir/git, right: langs/duration
 format = """$os$username$directory$git_branch$git_status$golang$python$nodejs$rust$docker_context$kubernetes$character"""
- 
+# Work around starship/starship#560
+add_newline = false
+
 right_format = """$status$cmd_duration"""
 
 # ── Prompt character ──────────────────────────────────────────────────────────
@@ -70,6 +72,9 @@ deleted = "✘ $count"
 commit_hash_length = 4
 tag_symbol = ' '
 
+[line_break]
+disabled = true
+
 # ── Languages ─────────────────────────────────────────────────────────────────
 [golang]
 symbol = " "
@@ -102,8 +107,7 @@ only_with_files = true
 symbol = "󱃾 "
 style = "bold blue"
 format = '[$symbol$context(\($namespace\) )]($style)'
-disabled = false
-detect_env_vars = ['KUBECONFIG', 'KUBECTL_CONTEXT']
+disabled = true 
 
 # ── Command duration ──────────────────────────────────────────────────────────
 [cmd_duration]

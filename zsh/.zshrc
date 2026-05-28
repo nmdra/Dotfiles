@@ -150,6 +150,9 @@ fpath=(/opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/zsh $fpath)
 autoload -Uz compinit && compinit
 
 # ── Starship prompt (must be last) ────────────────────────────────────────────
+
+# Work around starship/starship#560
+precmd() { precmd() { echo ""} }
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
 export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 eval "$(starship init zsh)"
