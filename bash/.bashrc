@@ -111,3 +111,9 @@ complete -C /usr/bin/terraform terraform
 # >>>> Vagrant command completion (start)
 . /opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/bash/completion.sh
 # <<<<  Vagrant command completion (end)
+
+. "$HOME/.local/share/../bin/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/nimendra/.local/bin:$PATH"

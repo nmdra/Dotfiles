@@ -1,150 +1,166 @@
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# ── Starship instant prompt cache ────────────────────────────────────────────
+export STARSHIP_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/starship"
+mkdir -p "$STARSHIP_CACHE"
 
-export ZSH="${XDG_CONFIG_HOME:-$HOME/.config}/.oh-my-zsh"
+# ── XDG Base Dirs (define early so everything below can use them) ─────────────
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# Ensure required dirs exist
+mkdir -p "$XDG_STATE_HOME/bash" "$XDG_CACHE_HOME/X11"
+
+# ── Oh-My-Zsh ─────────────────────────────────────────────────────────────────
+export ZSH="$XDG_CONFIG_HOME/.oh-my-zsh"
+ZSH_THEME=""   # disabled — using Starship instead
 
 HYPHEN_INSENSITIVE="true"
-
- zstyle ':omz:update' mode disabled  # disable automatic updates
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-# DISABLE_LS_COLORS="true"
 DISABLE_AUTO_TITLE="true"
-# ENABLE_CORRECTION="true"
-# COMPLETION_WAITING_DOTS="true"
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-# HIST_STAMPS="mm/dd/yyyy"
-# Add wisely, as too many plugins slow down shell startup.
+zstyle ':omz:update' mode disabled
+
 plugins=(
-    git
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-    fzf
-    sudo
-    auto-notify
-    you-should-use
-    aliases
-    forgit
-    fzf-tab
-    golang
-    kubectl
-  )
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  fzf
+  sudo
+  auto-notify
+  you-should-use
+  aliases
+  forgit
+  fzf-tab
+  golang
+  kubectl
+  aws
+)
 
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
-eval "$(zoxide init zsh)"
-# eval "$(zoxide init --cmd cd zsh)"
+# ── Shell Options ──────────────────────────────────────────────────────────────
+setopt AUTO_PUSHD           # push dirs onto stack on cd
+setopt PUSHD_IGNORE_DUPS    # no duplicate dirs in stack
+setopt CORRECT              # suggest corrections for commands
+setopt HIST_IGNORE_ALL_DUPS # remove older duplicate history entries
+setopt HIST_REDUCE_BLANKS   # strip superfluous blanks from history
+setopt SHARE_HISTORY        # share history across sessions
 
-# User configuration
+# ── History ───────────────────────────────────────────────────────────────────
+export HISTFILE="$XDG_STATE_HOME/bash/history"
+export HISTSIZE=50000
+export SAVEHIST=50000
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
+# ── Locale & Term ─────────────────────────────────────────────────────────────
 export LANG=en_US.UTF-8
+export TERM="xterm-256color"
+
+# ── Editor ────────────────────────────────────────────────────────────────────
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Use nvim as manpager inside nvim, otherwise use bat for a nicer fallback
+if [[ -n "${NVIM_LISTEN_ADDRESS+x}" ]]; then
+  export MANPAGER="/usr/bin/nvim -c 'Man!' -o -"
+else
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+# ── Tool-specific XDG paths ───────────────────────────────────────────────────
+export ANDROID_HOME="$XDG_DATA_HOME/android"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"   # fixed typo: was "xsession-errorst"
+
+# ── PATH ──────────────────────────────────────────────────────────────────────
+export PATH="$HOME/.local/bin:$PATH"
+
+# ── Go ────────────────────────────────────────────────────────────────────────
+# GOPATH/GOBIN/GOCACHE are set via `go env -w` in ~/.config/go/env
+# Shell only needs to point Go at that file — no subprocess, no PATH addition
+# (GOBIN is ~/.local/bin which is already in PATH above)
+export GOENV="$XDG_CONFIG_HOME/go/env"
+
+# ── Input Method ──────────────────────────────────────────────────────────────
+export XMODIFIERS=@im=ibus
+
+# ── auto-notify ───────────────────────────────────────────────────────────────
 export AUTO_NOTIFY_THRESHOLD=15
 AUTO_NOTIFY_IGNORE+=("docker" "lf" "paclist" "cdd" "fzf" "zi")
 
-#  EXPORT{{{
-
-export TERM="xterm-256color"                      #getting proper colors
-export EDITOR="nvim"
-export VISUAL="nvim"
-# export MANPAGER="sh -c 'col -bx | bat -l man -p'" #pacman -S bat
-if [ -n "${NVIM_LISTEN_ADDRESS+x}"]; then
-    export MANPAGER="/usr/bin/nvim -c 'Man!' -o -"
-fi
-
-# export HISTFILE=$HOME/.local/state/.bash_history
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
-export HISTFILE="${XDG_STATE_HOME}"/bash/history
-export ANDROID_HOME="$XDG_DATA_HOME"/android
-export CARGO_HOME="$XDG_DATA_HOME"/cargo
-export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
-export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export PATH="$PATH:$(go env GOPATH)/bin"
-# export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-# export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
-export ERRFILE="$XDG_CACHE_HOME"/X11/xsession-errorst
-
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
-
-#}}}
-
-# alias #{{{
-
-DATE=$(date -I)
-
-alias air='~/go/bin/air'
+# ── Aliases ───────────────────────────────────────────────────────────────────
+alias air='~/.local/bin/air'
 alias ls='exa --icons'
-alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 alias lsa='exa --all --icons --long --reverse --sort=modified'
-alias paclist="pacman -Slq | fzf --reverse --header "Serach_Package" --multi --preview 'pacman -Si {1}' | xclip -sel clip"
-alias lf='lfub.sh'
+alias wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'   # fixed: was missing quotes
+alias open='. open'
+alias xcopy='xclip -sel clip'
+alias v='nvim'
+
+# Package management (Arch)
+alias pacsyu='sudo pacman -Syu'
+alias pacs='sudo pacman -S'
+alias pacr='sudo pacman -R'
+alias paclist="pacman -Slq | fzf --reverse --header 'Search Package' --multi --preview 'pacman -Si {1}' | xclip -sel clip"
+
+# System
 alias setcharge='sudo tlp setcharge'
 alias envy='envycontrol -q'
 alias cpustat='auto-cpufreq --stats'
-alias pacsyu='sudo pacman -Syu'
-alias pacs='sudo pacman -S '
-alias pacr='sudo pacman -R '
-alias v='nvim'
+alias lf='lfub.sh'
+
+# Network
 alias convpn='protonvpn-cli connect'
 alias disvpn='protonvpn-cli disconnect'
-alias mpvstream='mpv -ytdl-format=worst -cache=yes --cache-secs=5'
-alias ytmusic="mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf "
+
+# Media
+alias mpvstream='mpv --ytdl-format=worst --cache=yes --cache-secs=5'
+alias ytmusic='mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --term-osd-bar-chars=󰎈󰎈 --loop-playlist=inf'
+
+# Cloud sync
 alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
+
+# Run pandoc in Docker (keeps host clean)
 alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extra'
-alias open='. open'
-# alias kube='kubectl'
-#}}}
 
-#FZF{{{
+# ── FZF ───────────────────────────────────────────────────────────────────────
 export FZF_DEFAULT_OPTS=" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+  --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
-export FZF_DEFAULT_COMMAND="fd -H |sed 's@^\./@@'"
+export FZF_DEFAULT_COMMAND="fd -H | sed 's@^\./@@'"
+export FZF_ALT_C_COMMAND="fd -H | sed 's@\./@@'"
+export FZF_CTRL_T_COMMAND="fd --follow | sed 's@^\./@@'"
 
-export FZF_ALT_C_COMMAND="fd -H |sed 's@\./@@'"
-
-export FZF_CTRL_T_COMMAND="fd --follow |sed 's@^\./@@'"
-
-#}}}
-
-# fzf-tab
-# set list-colors to enable filename colorizing
+# ── fzf-tab ───────────────────────────────────────────────────────────────────
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
-# preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
-# preexec() { print -Pn "\e]0;$1%~\a" } # Command + Directory
-preexec() { print -Pn "\e]0;$1\a" } # Command
+# ── Zoxide ────────────────────────────────────────────────────────────────────
+eval "$(zoxide init zsh)"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.config/.oh-my-zsh/custom/.p10k.zsh ]] || source ~/.config/.oh-my-zsh/custom/.p10k.zsh
+# ── Terminal title: show running command ──────────────────────────────────────
+preexec() { print -Pn "\e]0;$1\a" }
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# ── History queue hook (for external tooling) ─────────────────────────────────
+zshaddhistory() {
+  echo "${1%%$'\n'}" >> ~/.bash_history_queue
+}
 
-
-
-
+# ── Completions ───────────────────────────────────────────────────────────────
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 
-# >>>> Vagrant command completion (start)
+# Vagrant completions
 fpath=(/opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/zsh $fpath)
-compinit
-# <<<<  Vagrant command completion (end)
+autoload -Uz compinit && compinit   # single call, avoids double-init with oh-my-zsh
+
+# Added by Antigravity CLI installer
+export PATH="/home/nimendra/.local/bin:$PATH"
+
+# ── Starship prompt ───────────────────────────────────────────────────────────
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
+eval "$(starship init zsh)"
