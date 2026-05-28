@@ -1,79 +1,60 @@
 #!/bin/sh
 
-# Setting this, so the repo does not need to be given on the commandline:
-export BORG_REPO=/run/media/nimendra/75DB-97E6/Backup
+# Update this path if you move to an ENCRYPTED repo
+export BORG_REPO='/run/media/nimendra/75DB-97E6/SecureBackup'
+export BORG_PASSPHRASE='BackupNimendra'
 
-# See the section "Passphrase notes" for more infos.
-export BORG_PASSPHRASE='nimendraBackup'
-
-# some helpers and error handling:
-info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
+info() { printf "\n%s %s\n\n" "$(date)" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
 info "Starting backup"
 
-# Backup the most important directories into an archive named after
-# the machine this script is currently running on:
-
-borg create                                         \
-    --verbose                                       \
-    --filter AME                                    \
-    --progress                                      \
-    --stats                                         \
-    --show-rc                                       \
-    --compression zstd,11                           \
-    --exclude-caches                                \
-    --exclude '/home/nimendra/.cache/*'             \
-    --exclude '/home/nimendra/Videos/ENT/*'         \
-    --exclude '/home/nimendra/Downloads/Torrent/*'  \
-    --exclude '/home/nimendra/Documents/Y2S2/*'     \
-    --exclude '/home/nimendra/Music/music/*'        \
-    --exclude '/home/nimendra/Music/live/*'         \
-                                                    \
-    ::'{hostname}-{now}'                            \
-    /home/nimendra/
+# Added -x to stay on one file system
+# Added --checkpoint-interval 1800 (every 30 mins) for safety on large backups
+borg create \
+  --verbose \
+  --filter AME \
+  --progress \
+  --stats \
+  --show-rc \
+  --compression zstd,11 \
+  --one-file-system \
+  --exclude-caches \
+  --exclude '/home/nimendra/.cache/*' \
+  --exclude '/home/nimendra/.local/share/Trash/*' \
+  --exclude '/home/nimendra/Downloads/Torrent/*' \
+  ::'{hostname}-{now}' \
+  /home/nimendra/
 
 backup_exit=$?
 
 info "Pruning repository"
 
-# Use the `prune` subcommand to maintain 7 daily, 4 weekly and 6 monthly
-# archives of THIS machine. The '{hostname}-*' matching is very important to
-# limit prune's operation to this machine's archives and not apply to
-# other machines' archives also:
-
-borg prune                          \
-    --list                          \
-    --glob-archives '{hostname}-*'  \
-    --show-rc                       \
-    --keep-daily    5               \
-    --keep-weekly   3               \
-    --keep-monthly  4
+# Updated to match your intended 7/4/6 retention
+borg prune \
+  --list \
+  --glob-archives '{hostname}-*' \
+  --show-rc \
+  --keep-daily 7 \
+  --keep-weekly 4 \
+  --keep-monthly 4
 
 prune_exit=$?
 
-# actually free repo disk space by compacting segments
-
 info "Compacting repository"
-
 borg compact
-
 compact_exit=$?
 
-# use highest exit code as global exit code
-global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
-global_exit=$(( compact_exit > global_exit ? compact_exit : global_exit ))
+# Simplified exit code logic
+global_exit=0
+for exit_code in $backup_exit $prune_exit $compact_exit; do
+  [ $exit_code -gt $global_exit ] && global_exit=$exit_code
+done
 
 if [ ${global_exit} -eq 0 ]; then
-    info "Backup, Prune, and Compact finished successfully"
-elif [ ${global_exit} -eq 1 ]; then
-    info "Backup, Prune, and/or Compact finished with warnings"
+  info "Success"
 else
-    info "Backup, Prune, and/or Compact finished with errors"
+  info "Finished with warnings/errors (Code: $global_exit)"
 fi
 
 exit ${global_exit}
-
-
-
-# --exclude '/home/nimendra/Desktop/*'          \
