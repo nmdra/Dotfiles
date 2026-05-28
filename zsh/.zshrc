@@ -1,15 +1,11 @@
-# ── Starship instant prompt cache ────────────────────────────────────────────
-export STARSHIP_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/starship"
-mkdir -p "$STARSHIP_CACHE"
-
-# ── XDG Base Dirs (define early so everything below can use them) ─────────────
+# ── XDG Base Dirs (must be first — everything depends on these) ───────────────
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
 # Ensure required dirs exist
-mkdir -p "$XDG_STATE_HOME/bash" "$XDG_CACHE_HOME/X11"
+mkdir -p "$XDG_STATE_HOME/bash" "$XDG_CACHE_HOME/X11" "$XDG_CACHE_HOME/starship"
 
 # ── Oh-My-Zsh ─────────────────────────────────────────────────────────────────
 export ZSH="$XDG_CONFIG_HOME/.oh-my-zsh"
@@ -37,7 +33,7 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
-# ── Shell Options ──────────────────────────────────────────────────────────────
+# ── Shell Options ─────────────────────────────────────────────────────────────
 setopt AUTO_PUSHD           # push dirs onto stack on cd
 setopt PUSHD_IGNORE_DUPS    # no duplicate dirs in stack
 setopt CORRECT              # suggest corrections for commands
@@ -58,7 +54,6 @@ export TERM="xterm-256color"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# Use nvim as manpager inside nvim, otherwise use bat for a nicer fallback
 if [[ -n "${NVIM_LISTEN_ADDRESS+x}" ]]; then
   export MANPAGER="/usr/bin/nvim -c 'Man!' -o -"
 else
@@ -70,18 +65,15 @@ export ANDROID_HOME="$XDG_DATA_HOME/android"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
-export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"   # fixed typo: was "xsession-errorst"
+export ERRFILE="$XDG_CACHE_HOME/X11/xsession-errors"
 
 # ── PATH ──────────────────────────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$PATH"
 
 # ── Go ────────────────────────────────────────────────────────────────────────
-# GOPATH/GOBIN/GOCACHE are set via `go env -w` in ~/.config/go/env
-# Shell only needs to point Go at that file — no subprocess, no PATH addition
-# (GOBIN is ~/.local/bin which is already in PATH above)
 export GOENV="$XDG_CONFIG_HOME/go/env"
 
-# ── Input Method ──────────────────────────────────────────────────────────────
+# ── Input Method ─────────────────────────────────────────────────────────────
 export XMODIFIERS=@im=ibus
 
 # ── auto-notify ───────────────────────────────────────────────────────────────
@@ -92,12 +84,12 @@ AUTO_NOTIFY_IGNORE+=("docker" "lf" "paclist" "cdd" "fzf" "zi")
 alias air='~/.local/bin/air'
 alias ls='exa --icons'
 alias lsa='exa --all --icons --long --reverse --sort=modified'
-alias wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'   # fixed: was missing quotes
+alias wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'
 alias open='. open'
 alias xcopy='xclip -sel clip'
 alias v='nvim'
 
-# Package management (Arch)
+# Package management (Arch/Manjaro)
 alias pacsyu='sudo pacman -Syu'
 alias pacs='sudo pacman -S'
 alias pacr='sudo pacman -R'
@@ -120,7 +112,7 @@ alias ytmusic='mpv --vo=null --video=no --pause=no --no-video --term-osd-bar --t
 # Cloud sync
 alias cloneg='rclone sync --copy-links ~/Documents/Y1S2/LEARNING remote-gdrive:Y1S2/LEARNING -P -v && rclone tree remote-gdrive:'
 
-# Run pandoc in Docker (keeps host clean)
+# Pandoc via Docker
 alias pandoc='docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/extra'
 
 # ── FZF ───────────────────────────────────────────────────────────────────────
@@ -142,10 +134,10 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $real
 # ── Zoxide ────────────────────────────────────────────────────────────────────
 eval "$(zoxide init zsh)"
 
-# ── Terminal title: show running command ──────────────────────────────────────
+# ── Terminal title ────────────────────────────────────────────────────────────
 preexec() { print -Pn "\e]0;$1\a" }
 
-# ── History queue hook (for external tooling) ─────────────────────────────────
+# ── History queue hook ────────────────────────────────────────────────────────
 zshaddhistory() {
   echo "${1%%$'\n'}" >> ~/.bash_history_queue
 }
@@ -154,13 +146,10 @@ zshaddhistory() {
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 
-# Vagrant completions
 fpath=(/opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/zsh $fpath)
-autoload -Uz compinit && compinit   # single call, avoids double-init with oh-my-zsh
+autoload -Uz compinit && compinit
 
-# Added by Antigravity CLI installer
-export PATH="/home/nimendra/.local/bin:$PATH"
-
-# ── Starship prompt ───────────────────────────────────────────────────────────
+# ── Starship prompt (must be last) ────────────────────────────────────────────
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
+export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 eval "$(starship init zsh)"
