@@ -1,2 +1,0 @@
-super + m
-    alacritty -t File\ Manager -e tmux new-session -A -D -s Files "lfub.sh"

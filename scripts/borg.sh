@@ -2,7 +2,7 @@
 
 # Update this path if you move to an ENCRYPTED repo
 export BORG_REPO='/run/media/nimendra/75DB-97E6/SecureBackup'
-export BORG_PASSPHRASE='BackupNimendra'
+export BORG_PASSPHRASE='BORG_PASSPHRASE'
 
 info() { printf "\n%s %s\n\n" "$(date)" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM

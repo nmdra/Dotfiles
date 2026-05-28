@@ -256,7 +256,6 @@ nvidia-container-toolkit
 nvidia-prime
 nvtop
 obs-studio
-obsidian
 okular
 ollama
 openresolv

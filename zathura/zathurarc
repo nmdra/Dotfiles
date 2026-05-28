@@ -1,9 +1,9 @@
 # General Settings
 set guioptions "shv"
-set page-padding 2
-set adjust-open "best-fit"
-set window-height 3000
-set window-width 3000
+set page-padding 1
+set adjust-open "width"
+set window-height 800
+set window-width 960 
 set scroll-wrap true
 set scroll-page-aware true
 set statusbar-home-tilde true
@@ -13,6 +13,9 @@ set statusbar-basename true
 set incremental-search true
 set selection-clipboard "clipboard"
 set database "sqlite"
+
+set scroll-step 40
+set smooth-scroll true
 
 # Notification Settings
 set notification-error-bg "rgba(242,229,188,1)"  # bg

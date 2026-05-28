@@ -24,7 +24,7 @@
 
 ## Preview
 
-![Desktop Preview](/Desktop.webp "Desktop Preview")
+![Desktop Preview](/.github/assets/Desktop.webp "Desktop Preview")
 
 ---
 

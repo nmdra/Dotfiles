@@ -1,5 +1,10 @@
 #!/bin/bash
 
+use_okular=false
+if [[ "$1" == "--okular" ]]; then
+  use_okular=true
+fi
+
 # Select a book or paper using fd and fzf
 files=$(fd --follow --type f --extension pdf --extension epub | fzf --height 75% --reverse --no-info --multi --prompt "Select Book/Paper  : ")
 
@@ -8,7 +13,11 @@ if [[ -n "$files" ]]; then
   # Open each selected file
   while IFS= read -r file; do
     if [[ -f "$file" ]]; then
-      nohup zathura "$file" >/dev/null 2>&1 &
+      if $use_okular; then
+        nohup okular "$file" >/dev/null 2>&1 &
+      else
+        nohup zathura "$file" >/dev/null 2>&1 &
+      fi
       disown
       echo "Opened file: $file"
     else
