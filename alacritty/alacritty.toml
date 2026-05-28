@@ -109,6 +109,8 @@ color = "#fab387"
 index = 17
 color = "#f5e0dc"
 
+[general]
+live_config_reload = true
 
 [cursor]
 style = "Block"
@@ -227,7 +229,8 @@ mods = "Shift"
 decorations = "full"
 dynamic_padding = true
 dynamic_title = true
-opacity = 0.98
+opacity = 0.85
+blur = true
 title = "Terminal"
 
 [window.class]
