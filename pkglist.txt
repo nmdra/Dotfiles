@@ -371,7 +371,6 @@ ttf-joypixels
 ttf-ms-fonts
 udiskie
 udisks2
-ueberzugpp
 unarchiver
 unzip
 usb_modeswitch
