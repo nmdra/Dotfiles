@@ -99,7 +99,7 @@ alias paclist="pacman -Slq | fzf --reverse --header 'Search Package' --multi --p
 alias setcharge='sudo tlp setcharge'
 alias envy='envycontrol -q'
 alias cpustat='auto-cpufreq --stats'
-alias lf='lfub.sh'
+# alias lf='lfub.sh'
 
 # Network
 alias convpn='protonvpn-cli connect'

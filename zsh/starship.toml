@@ -25,7 +25,7 @@ disabled = false
 format = '[$symbol](bold green) '
 
 [os.symbols]
-Manjaro = " "
+Manjaro = ""
 Linux = " "
 
 # ── User ──────────────────────────────────────────────────────────────────────
@@ -46,9 +46,9 @@ read_only = " 󰌾"
 read_only_style = "red"
 
 [directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
+"Documents" = "󰈙"
+"Downloads" = ""
+"Music" = "󰝚"
 "Pictures" = " "
 
 # ── Git ───────────────────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ disabled = true
 [golang]
 symbol = " "
 style = "bold cyan"
-format = 'via [$symbol($version )]($style)'
+format = '[$symbol($version )]($style)'
 
 [python]
 symbol = " "
@@ -100,13 +100,13 @@ format = '[$symbol($version )]($style)'
 [docker_context]
 symbol = " "
 style = "bold blue"
-format = '[$symbol$context ]($style)'
+format = '[$symbol$context]($style)'
 only_with_files = true
 
 [kubernetes]
 symbol = "󱃾 "
 style = "bold blue"
-format = '[$symbol$context(\($namespace\) )]($style)'
+format = '[$symbol$context(\($namespace\))]($style)'
 disabled = true 
 
 # ── Command duration ──────────────────────────────────────────────────────────
