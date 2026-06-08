@@ -114,7 +114,7 @@ disabled = true
 min_time = 2_000
 show_milliseconds = false
 format = 'took [$duration](bold yellow) '
-show_notifications = true
+# show_notifications = true
 min_time_to_notify = 45_000
 
 # ── Status (right prompt — only on error) ─────────────────────────────────────
