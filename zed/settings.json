@@ -7,7 +7,22 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "collaboration_panel": {
+    "button": false
+  },
+  "auto_signature_help": true,
+  "enable_language_server": true,
+  "use_smartcase_search": true,
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true
+    }
+  },
+  "ui_font_family": ".ZedSans",
+  "cli_default_open_behavior": "new_window",
+  "redact_private_values": true,
   "project_panel": {
+    "bold_folder_labels": false,
     "git_status_indicator": true,
     "diagnostic_badges": true,
     "dock": "left"
@@ -23,16 +38,30 @@
     "git_status": true
   },
   "status_bar": {
+    "line_endings_button": true,
     "show_active_file": true
   },
-  "disable_ai": true,
+  "disable_ai": false,
   "agent": {
     "default_model": {
-      "provider": "openrouter",
-      "model": "moonshotai/kimi-k2.6:free",
-      "enable_thinking": true
+      "provider": "zed.dev",
+      "model": "gpt-5.3-codex",
+      "enable_thinking": true,
+      "effort": "medium"
     },
-    "favorite_models": [],
+    "default_profile": "write",
+    "dock": "right",
+    "show_turn_stats": true,
+    "play_sound_when_agent_done": "when_hidden",
+    "sidebar_side": "right",
+    "favorite_models": [
+      {
+        "provider": "zed.dev",
+        "model": "gemini-3.5-flash",
+        "enable_thinking": true,
+        "effort": "MEDIUM"
+      }
+    ],
     "model_parameters": []
   },
   "agent_servers": {
@@ -45,6 +74,11 @@
   "agent_buffer_font_size": 16.0,
   "agent_ui_font_size": 16.0,
   "terminal": {
+    "show_count_badge": true,
+    "toolbar": {
+      "breadcrumbs": true
+    },
+    "keep_selection_on_copy": true,
     "font_weight": 300.0,
     "font_size": 16.0
   },
@@ -53,16 +87,14 @@
     "parser": "",
     "allowed": true
   },
+  "format_on_save":"on",
   "semantic_tokens": "combined",
   "proxy": "",
   "session": {
     "trust_all_worktrees": true
   },
-  "buffer_font_fallbacks": [
-    "monospace",
-    "monospace"
-  ],
-  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_fallbacks": ["JetBrainsMono NF"],
+  "buffer_font_family": "JetBrainsMono NF",
   "base_keymap": "VSCode",
   "telemetry": {
     "metrics": false,
