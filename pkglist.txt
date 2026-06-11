@@ -39,7 +39,6 @@ chaotic-keyring
 chaotic-mirrorlist
 cloc
 cmake
-code
 coreutils
 cowsay
 cpupower
@@ -414,12 +413,12 @@ xournalpp
 xz
 yaml-language-server
 yarn
+yarr-bin
 yay
 zam-plugins-lv2
 zathura
 zathura-cb
 zathura-pdf-mupdf
-zed
 zen-browser-bin
 zip
 zlib-ng
