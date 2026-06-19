@@ -205,7 +205,6 @@ man-pages
 manjaro-alsa
 manjaro-application-utility
 manjaro-browser-settings
-manjaro-documentation-en
 manjaro-firmware
 manjaro-grub-theme-blurred
 manjaro-hello
@@ -231,7 +230,6 @@ modemmanager
 mpv
 mpv-mpris
 mtpfs
-n-m3u8dl-re-bin
 nano
 nano-syntax-highlighting
 neovim
@@ -274,7 +272,6 @@ patch
 pavucontrol
 pciutils
 pdfgrep
-pear-desktop-bin
 perl
 perl-file-mimeinfo
 pgcli
@@ -312,7 +309,6 @@ qt5-virtualkeyboard
 qt5-websockets
 rar
 rclone
-reiserfsprogs
 ripgrep
 ripgrep-all
 rlwrap
@@ -331,7 +327,6 @@ skopeo
 slop
 sof-firmware
 spectacle
-spectre-meltdown-checker
 sqlc
 squashfs-tools
 sshfs
@@ -379,10 +374,8 @@ usbutils
 util-linux
 uvicorn
 vagrant
-vdhcoapp-bin
 vdpauinfo
 vesktop
-vimv-git
 virtualbox
 virtualbox-guest-iso
 virtualbox-guest-utils
