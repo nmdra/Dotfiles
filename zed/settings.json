@@ -20,7 +20,8 @@
   },
   "ui_font_family": ".ZedSans",
   "cli_default_open_behavior": "new_window",
-  "redact_private_values": true,
+  "redact_private_values": false,
+  "relative_line_numbers": "enabled",
   "project_panel": {
     "bold_folder_labels": false,
     "git_status_indicator": true,
