@@ -415,7 +415,9 @@ ShowOSD=none
 _launch=Meta+E
 
 [services][org.kde.spectacle.desktop]
+CurrentMonitorScreenShot=
 FullScreenScreenShot=Print
+OpenWithoutScreenshot=
 _launch=none
 
 [services][org.kde.touchpadshortcuts.desktop]
