@@ -58,7 +58,7 @@ yay.create_autocmd("UpgradeSelect", {
 	desc = "skip recently modified AUR upgrades",
 	callback = function(event)
 		local exclude = {}
-		local recent_cutoff = os.time() - (3 * 24 * 60 * 60)
+		local recent_cutoff = os.time() - (3 * 12 * 60 * 60)
 		for _, pkg in ipairs(event.data.upgrades) do
 			if pkg.repository == "aur" and pkg.last_modified >= recent_cutoff then
 				yay.log.warn("pre-excluding recently modified AUR package:", pkg.name)
@@ -77,34 +77,52 @@ yay.create_autocmd("UpgradeSelect", {
 -- guarantee -- always read PKGBUILDs yourself, especially with diff_menu/
 -- edit_menu enabled above.
 yay.create_autocmd("AURPreInstall", {
-  desc = "warn on suspicious PKGBUILD patterns",
-  callback = function(event)
-    local suspicious_patterns = {
-      { pattern = "curl[^\n]*|%s*sh",           reason = "pipes a remote download directly into a shell (curl | sh)" },
-      { pattern = "curl[^\n]*|%s*bash",         reason = "pipes a remote download directly into a shell (curl | bash)" },
-      { pattern = "wget[^\n]*|%s*sh",           reason = "pipes a remote download directly into a shell (wget | sh)" },
-      { pattern = "wget[^\n]*|%s*bash",         reason = "pipes a remote download directly into a shell (wget | bash)" },
-      { pattern = "base64%s+%-%-?d",            reason = "decodes a base64 blob (often used to hide payloads)" },
-      { pattern = "base64%s+%-D",               reason = "decodes a base64 blob (often used to hide payloads)" },
-      { pattern = "rm%s+%-rf%s+/[^%w]",         reason = "contains a destructive recursive delete against root paths" },
-      { pattern = "%f[%w]eval%f[%W]",           reason = "uses eval, which can execute arbitrary obfuscated code" },
-      { pattern = "/dev/tcp/",                  reason = "opens a raw TCP connection (possible reverse shell)" },
-      { pattern = "nc%s+%-e",                   reason = "spawns netcat with -e (possible reverse shell)" },
-    }
+	desc = "warn on suspicious PKGBUILD patterns",
+	callback = function(event)
+		local suspicious_patterns = {
+			{
+				pattern = "curl[^\n]*|%s*sh",
+				reason = "pipes a remote download directly into a shell (curl | sh)",
+			},
+			{
+				pattern = "curl[^\n]*|%s*bash",
+				reason = "pipes a remote download directly into a shell (curl | bash)",
+			},
+			{
+				pattern = "wget[^\n]*|%s*sh",
+				reason = "pipes a remote download directly into a shell (wget | sh)",
+			},
+			{
+				pattern = "wget[^\n]*|%s*bash",
+				reason = "pipes a remote download directly into a shell (wget | bash)",
+			},
+			{ pattern = "base64%s+%-%-?d", reason = "decodes a base64 blob (often used to hide payloads)" },
+			{ pattern = "base64%s+%-D", reason = "decodes a base64 blob (often used to hide payloads)" },
+			{
+				pattern = "rm%s+%-rf%s+/[^%w]",
+				reason = "contains a destructive recursive delete against root paths",
+			},
+			{
+				pattern = "%f[%w]eval%f[%W]",
+				reason = "uses eval, which can execute arbitrary obfuscated code",
+			},
+			{ pattern = "/dev/tcp/", reason = "opens a raw TCP connection (possible reverse shell)" },
+			{ pattern = "nc%s+%-e", reason = "spawns netcat with -e (possible reverse shell)" },
+		}
 
-    local hits = {}
-    for _, entry in ipairs(suspicious_patterns) do
-      if event.data.pkgbuild:lower():match(entry.pattern:lower()) then
-        table.insert(hits, entry.reason)
-      end
-    end
+		local hits = {}
+		for _, entry in ipairs(suspicious_patterns) do
+			if event.data.pkgbuild:lower():match(entry.pattern:lower()) then
+				table.insert(hits, entry.reason)
+			end
+		end
 
-    if #hits > 0 then
-      yay.log.warn(event.match .. ": PKGBUILD looks suspicious:")
-      for _, reason in ipairs(hits) do
-        yay.log.warn("  - " .. reason)
-      end
-      yay.log.warn("Review the PKGBUILD carefully before continuing (enable edit_menu/diff_menu above).")
-    end
-  end,
+		if #hits > 0 then
+			yay.log.warn(event.match .. ": PKGBUILD looks suspicious:")
+			for _, reason in ipairs(hits) do
+				yay.log.warn("  - " .. reason)
+			end
+			yay.log.warn("Review the PKGBUILD carefully before continuing (enable edit_menu/diff_menu above).")
+		end
+	end,
 })
