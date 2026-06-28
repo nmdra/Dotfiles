@@ -6,6 +6,7 @@ alsa-firmware
 alsa-utils
 android-tools
 anki
+ansible
 antigravity-cli
 appimagelauncher
 ark
@@ -233,6 +234,7 @@ mtpfs
 nano
 nano-syntax-highlighting
 neovim
+nethogs
 networkmanager
 networkmanager-l2tp
 networkmanager-openconnect
@@ -240,6 +242,7 @@ networkmanager-openvpn
 networkmanager-pptp
 networkmanager-vpnc
 nfs-utils
+nodejs
 noise-suppression-for-voice
 noto-fonts
 npm
