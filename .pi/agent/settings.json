@@ -1,0 +1,13 @@
+{
+  "lastChangelogVersion": "0.80.1",
+  "defaultProvider": "z-ai",
+  "defaultModel": "glm-5.2",
+  "defaultThinkingLevel": "off",
+  "theme": "dark",
+  "npmCommand": [
+    "pnpm"
+  ],
+  "packages": [
+    "npm:pi-web-access"
+  ]
+}
