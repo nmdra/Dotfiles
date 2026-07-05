@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.1",
+  "lastChangelogVersion": "0.80.2",
   "defaultProvider": "z-ai",
   "defaultModel": "glm-5.2",
   "defaultThinkingLevel": "off",
@@ -8,6 +8,7 @@
     "pnpm"
   ],
   "packages": [
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:pi-subagents"
   ]
 }

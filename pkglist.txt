@@ -123,6 +123,7 @@ hardcode-tray
 haveged
 helm
 helvum
+herdr-bin
 htop
 hugo
 img2pdf
@@ -292,6 +293,7 @@ plasma-workspace
 plasma-x11-session
 plasma6-runners-emojirunner
 playerctl
+pnpm
 poppler-data
 powerdevil
 powertop

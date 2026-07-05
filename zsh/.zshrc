@@ -143,6 +143,13 @@ complete -o nospace -C /usr/bin/terraform terraform
 fpath=(/opt/vagrant/embedded/gems/gems/vagrant-2.4.2/contrib/zsh $fpath)
 autoload -Uz compinit && compinit
 
+# pnpm
+export PNPM_HOME="/home/nimendra/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+
 # ── Starship prompt (must be last) ────────────────────────────────────────────
 
 # Work around starship/starship#560
@@ -150,11 +157,3 @@ precmd() { precmd() { echo ""} }
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
 export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 eval "$(starship init zsh)"
-
-# pnpm
-export PNPM_HOME="/home/nimendra/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
