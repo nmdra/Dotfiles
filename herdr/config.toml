@@ -1,0 +1,19 @@
+onboarding = false
+[ui.toast]
+delivery = "herdr"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "priority"
+
+[keys]
+prefix = "ctrl+space"
+goto = "prefix+g"
+new_tab = "prefix+c"
+next_tab = "prefix+n"
+previous_tab = "prefix+p"
+focus_pane_left = "prefix+h"
+navigate_workspace_down = "j"
+navigate_pane_down = "ctrl+j"
+split_horizontal = "prefix+-"
+split_vertical = "prefix+/"
