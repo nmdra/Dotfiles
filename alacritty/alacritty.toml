@@ -229,8 +229,8 @@ mods = "Shift"
 decorations = "full"
 dynamic_padding = true
 dynamic_title = true
-opacity = 0.85
-blur = true
+opacity = 1
+# blur = true # https://github.com/alacritty/alacritty/issues/8987
 title = "Terminal"
 
 [window.class]
