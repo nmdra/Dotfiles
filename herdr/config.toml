@@ -1,6 +1,6 @@
 onboarding = false
 [ui.toast]
-delivery = "herdr"
+delivery = "system"
 
 [ui]
 show_agent_labels_on_pane_borders = true
