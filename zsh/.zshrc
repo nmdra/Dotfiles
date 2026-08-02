@@ -150,6 +150,12 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 
+# Notebrain-CLI
+source <(notebrain completion -c zsh)
+
+# Enable Exa-powered websearch in opencode
+export OPENCODE_ENABLE_EXA=1
+
 # ── Starship prompt (must be last) ────────────────────────────────────────────
 
 # Work around starship/starship#560
