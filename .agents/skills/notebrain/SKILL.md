@@ -1,171 +1,121 @@
 ---
 name: notebrain-assistant
-description: Use NoteBrain to search, index, and explore an Obsidian vault via ChromaDB. Make sure to use this skill whenever the user mentions their notes, knowledge base, Obsidian vault, semantic search, finding connections, unlinked notes, or asks general exploratory questions like "what do I know about X", "find notes related to Y", "what connects to Z", or "summarize my notes on W", even if they don't explicitly mention NoteBrain, vector search, or ChromaDB.
+description: Use NoteBrain to search, and explore an Obsidian vault via ChromaDB. Make sure to use this skill whenever the user mentions their notes, knowledge base, Obsidian vault, semantic search, finding connections, unlinked notes, or asks general exploratory questions like "what do I know about X", "find notes related to Y", "what connects to Z", or "summarize my notes on W", even if they don't explicitly mention NoteBrain, vector search, or ChromaDB.
 license: MIT
+compatibility: Requires the `notebrain` binary installed.
 allowed-tools: Bash(notebrain:*), Bash(./notebrain:*)
 ---
 
 # NoteBrain CLI Skill for AI Agents
 
-NoteBrain is a high-performance Go CLI tool that indexes an Obsidian vault into a local ChromaDB vector database. It provides semantic search, graph traversal, backlink discovery, hidden relationship finding, full note retrieval, and tag analysis across markdown notes.
+NoteBrain indexes an Obsidian vault into local ChromaDB for semantic search, graph traversal, and note retrieval.
 
-## Core Execution Principles & Rationale
+## Scope & Boundaries
 
-To operate efficiently and prevent wasted tokens or hung sessions, follow these foundational principles:
+NoteBrain is **read-only** — it searches, retrieves, and explores notes that have already been indexed. It cannot create, rename, move, or edit notes. If the user's request requires writing or modifying vault files, use standard file tools (or the obsidian-cli skill if available) for those mutations, and use NoteBrain only for the discovery/search portion of the workflow.
 
-1. **NoteBrain Only — No Generic File Search**: Never use `grep`, `find`, `ls` or ad-hoc shell scripting against the vault's markdown files to answer the user's question. Treat `notebrain` as the only interface to the vault's content. If a query returns nothing useful, refine the `notebrain` query rather than falling back to a filesystem search.
-2. **Non-Interactive Execution (`--format json`)**: Always specify `--format json` (or `ndjson`/`tsv`) on query commands so you receive structured, parseable data immediately without launching the interactive TUI. All examples below assume `--format json` unless noted.
-3. **AI Agent Command Chaining (`--jsonpath`)**: Whenever you only need specific fields (like extracting note slugs or text to pipe into follow-up commands), use `--jsonpath` (e.g., `--jsonpath="$.results[0].note_slug"`). Scalar values output as raw strings and arrays print each item on a new line, avoiding `jq`.
-4. **Retrieve Complete Notes (`notebrain get`)**: When `search` returns a relevant note chunk, use `notebrain get <note-slug-or-path>` rather than guessing chunk indices to retrieve the complete reconstructed markdown note.
-5. **Retrieve Content for Synthesis (`--include-text`)**: By default, query commands return lightweight metadata envelopes. Whenever your task requires summarizing or reasoning about chunk content directly from search results, append `--include-text`.
-6. **CLI Syntax Rules**: In development environments, execute `./notebrain` if `notebrain` is not in PATH. Always encapsulate note titles, tags, and queries in double quotes. Strictly use `--vault-path` and `--chroma-path` (never `--vault` or `--db`). For graph and note commands (`backlinks`, `connections`, `hidden`, `tags`, `get`), pass exactly one positional argument: `<note>`. For `boosted` search, specify `--seed=<slug>`. For resets, pipe confirmation (`echo yes | notebrain reset`).
-7. **Graph & Link Filtering (`--skip-attachments`, `--skip-phantom`)**: By default, NoteBrain excludes image/attachment links (`.webp`, `.png`, `.pdf`, `.canvas`) from graph edges (`--skip-attachments=true`), and excludes uncreated "phantom" notes (wikilinks without a `.md` file on disk) from results (`--skip-phantom=true`). To explore missing notes or broken links, pass `--skip-phantom=false` (marked with `"is_phantom": true` in JSON or `[phantom]` in text).
+## Pre-Flight: Verify NoteBrain Is Available
 
----
-
-## Token Budget Defaults & Session Caching
-
-To avoid burning unnecessary tokens and latency:
-
-- **Limit Result Sizes**: Default `--limit` to 5 (not the tool's default 10) unless the user asks for broad coverage.
-- **Selective `--include-text`**: Only pass `--include-text` on the _first_ command in a retrieval workflow. For follow-up commands (`connections`, `tags`, `backlinks` used purely to map structure), omit `--include-text` — slugs, titles, and scores are enough to decide what (if anything) to `get` in full.
-- **Prefer `--jsonpath`**: Extract only the fields you will actually use rather than loading full JSON envelopes into context.
-- **Reuse Within a Session**: If a `backlinks`, `connections`, or `hidden` call was already run for a given seed slug earlier in this conversation, reuse those results instead of re-querying, unless the user asked to re-ingest or the vault may have changed.
-
----
-
-## Command Selection Guide
-
-Select the specialized command tailored to the user's analytical goal:
-
-| User Intent                                         | Command       | Why & How to Use                                                                                                                |
-| --------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| "What do my notes say about X?"                     | `search`      | Performs vector similarity search across all note chunks. Use `--tag="TagName"` to filter by tag.                               |
-| "Read the full content of note Y"                   | `get`         | Retrieves and reconstructs the complete note text and metadata by slug or file path.                                            |
-| "What links directly to this note?"                 | `backlinks`   | Finds explicit `[[wikilink]]` references pointing to the target note.                                                           |
-| "What is structurally nearby in the graph?"         | `connections` | Executes breadth-first search (BFS) over wikilinks up to `--hops N`. Keep `--hops 1` or `--hops 2` to avoid exponential blowup. |
-| "What is related in meaning but NOT linked?"        | `hidden`      | Surfaces unlinked-but-semantically-similar notes. Highly valuable for discovering conceptual bridges.                           |
-| "Find concepts related to X centered around note Y" | `boosted`     | Combines vector similarity with graph proximity to a `--seed` note.                                                             |
-| "What notes share tags with X?"                     | `tags`        | Analyzes tag overlap. Returns clean tag strings in the `tags` array.                                                            |
-| "Is the database up to date?"                       | `stats`       | Outputs collection counts (`chunks`, `links`). Supports `--format=json` and `--jsonpath`.                                       |
-| "Index or re-index the vault"                       | `ingest`      | Synchronizes markdown notes into ChromaDB. Re-ingestion is idempotent.                                                          |
-
----
-
-## Command Syntax
-
-### Semantic Search & Tag Filtering (`search`)
+Before running your first query in a conversation, confirm NoteBrain is functional:
 
 ```bash
-notebrain search "kubernetes reconciliation" --tag="Kubernetes" --limit 5 --include-text
+notebrain stats --format=json
 ```
 
-#### Key search flags
+- If the binary is missing or errors, tell the user plainly: _"NoteBrain doesn't appear to be installed or accessible. I can't search your vault without it."_ Do not fall back to `grep`/`find` against raw markdown files.
+- If NoteBrain throws configuration or dependency errors, inform the user plainly so they can check their vault setup or configuration.
+- If `stats` returns `0` chunks, the vault hasn't been indexed yet. Tell the user: _"Your vault hasn't been indexed. Run `notebrain ingest` first, then ask me again."_
+- If `stats` succeeds with chunk counts > 0, proceed normally.
 
-| Flag                 | Purpose                                                                                                                                            | Default |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `--top-k N`          | Maximum chunks to retain **per note**. Prevents one long note from dominating results while preserving depth.                                      | `3`     |
-| `--context-window N` | Fetches ±N adjacent chunks around each match into `context`. Use for lightweight multi-result context; use `get` only when you need the full note. | `0`     |
-| `--has-tasks`        | Only return chunks that contain task lists (checkboxes).                                                                                           | off     |
-| `--has-code`         | Only return chunks that contain fenced code blocks.                                                                                                | off     |
-| `--section`          | Filter results to chunks under a specific heading path (e.g., `"Architecture > Components"`).                                                      | —       |
-| `--limit N`          | Maximum total results to return.                                                                                                                   | `10`    |
-| `--tag "TagName"`    | Filter or search by tag name.                                                                                                                      | —       |
-| `--min-score F`      | Suppress results below this similarity score (0–1).                                                                                                | `0.4`   |
+## Core Execution Principles
 
-### Complete Note Retrieval (`get`)
+1. **NoteBrain Only — No Generic Filesystem Search**: Never use `grep`, `find`, `ls`, or ad-hoc shell scripts against markdown files. Treat `notebrain` as the sole interface to the vault. If a query returns nothing, refine the query (synonyms, broader/narrower phrasing) rather than falling back to bash.
+
+2. **Session Caching & Reuse**: If `backlinks`, `connections`, or `hidden` was already executed for a given `note_slug` earlier in the conversation, reuse those results from context instead of re-querying — unless the user explicitly requests a fresh query or mentions they've just re-indexed/ingested the vault, in which case cached results may be stale.
+
+3. **Prioritize `--context-window N` + `--include-text` Over Blind `get`**: Never blindly run `notebrain get <slug>` after a search hit. Full notes can be thousands of lines long; fetching entire notes floods context and wastes tokens. Instead, pass `--context-window N` (e.g., `--context-window 1` or `2`) on your `search`, `hidden`, or `boosted` queries to fetch ±N adjacent chunks around the match. Only use `get` when a task explicitly demands the entire note from start to finish.
+
+4. **Token-Efficient Extraction (`--jsonpath` & `tsv`)**:
+   - Matching text snippets: `--jsonpath="$.results[*].text"`
+   - Surrounding chunk context: `--jsonpath="$.results[*].context"`
+   - When scanning tabular lists without text content, use `--format tsv` to drop repeating JSON key names.
+   - When outputting full JSON (i.e., not using `--jsonpath`), `file_path` is included by default. Pass `--show-file-path=false` to hide it and cut token footprint by roughly 40–50%.
+
+5. **Intelligent Query Splitting**: When researching compound questions or orthogonal topics (e.g., comparing two technologies), split the query into distinct positional arguments to activate multi-hit boosting:
+   - **Positional arguments**: `notebrain search "redis pubsub" "kafka brokers" --limit 5 --format json`
+
+6. **Avoid Blanket Chaining**: A single `search` with `--context-window 1 --include-text` answers most questions. Never blindly run `search → backlinks → connections → hidden` sequentially unless the user explicitly requests a comprehensive vault-wide audit of a topic. Pick the exact command tailored to the query.
+
+7. **Keep Result Sets Small**: Default `--limit` and `--top-k` to 3–5. Larger result sets rarely add useful signal — they flood context with diminishing-relevance matches and inflate token costs. Only increase beyond 5 when the user explicitly asks for more results or the task requires exhaustive coverage (e.g., "list all notes tagged X").
+
+8. **PDF Support**: By default, search results only return Markdown notes. If the user explicitly asks to include PDF notes in their search results, append the `--with-pdf` flag to `search` or `boosted` commands.
+
+## Progressive Retrieval Workflow (`notebrain search`)
+
+To prevent excessive tool calls, token bloat, and redundant queries, follow a two-step tiered retrieval:
+
+### Step 1: Start Lean (Candidate & Slug Discovery)
 
 ```bash
-notebrain get "02areaskubernetesckadkubernetes-native-applications"
+notebrain search "<query>" --format=json --include-text
 ```
 
-### Graph Connections, Hidden Links & Tags (`connections`, `hidden`, `tags`, `backlinks`)
+Check the `score` of your top candidates. If the top match has high similarity (`score ≥ 0.75`) and the text fully answers the user's question, **stop here**. Do not execute unnecessary follow-up queries.
 
-All graph and tag commands accept **exactly one positional argument**: the target note slug.
+If you've identified a candidate note but need surrounding paragraphs (±N chunks) to verify details:
 
 ```bash
-# Find explicit backlinks pointing to a note
-notebrain backlinks "kubernetes-architecture" --include-text
-
-# Traverse wikilink graph connections up to N hops
-notebrain connections "kubernetes-architecture" --hops 2
-
-# Find notes sharing common tags with the target note
-notebrain tags "kubernetes-architecture" --min-shared 1
-
-# Discover unlinked but semantically similar notes
-notebrain hidden "kubernetes-architecture" --limit 5 --include-text
+notebrain search "<query>" --format=json --include-text --top-k 2 --context-window 1
 ```
 
-#### Graph & Link Filtering Flags
+| Flag                 | Purpose                                                                                                                       | Example |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `--top-k N`          | Maximum chunks to retain **per note**. Prevents one long note from dominating results.                                        | `3`     |
+| `--context-window N` | Includes ±N adjacent chunks around each match in the `context` field. Use for lightweight surrounding context across results. | `1`     |
+| `--limit N`          | Maximum total number of results to return.                                                                                    | `5`     |
 
-| Flag                 | Purpose                                                                                               | Default |
-| -------------------- | ----------------------------------------------------------------------------------------------------- | ------- |
-| `--skip-attachments` | Exclude attachment and image links (e.g., `.webp`, `.png`, `.canvas`) from graph edges and backlinks. | `true`  |
-| `--skip-phantom`     | Exclude uncreated notes (phantom wikilinks without a markdown file on disk) from results.             | `true`  |
+### Step 2: Escalate Conditionally (Deep Traversal & Connections)
 
-### Graph-Boosted Search (`boosted`)
+Only when the task specifically requires exploring graph topology, backlinks, or implicit connections should you pass the discovered `note_slug` from Step 1 into specialized commands. Use the command reference below to pick the right one.
 
-```bash
-notebrain boosted --seed="kubernetes-architecture" "control plane components" --boost 1.5
-```
+## Command Reference
 
----
+| User Intent                                            | Command       | Syntax                                                                                 |
+| ------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------- |
+| "What do my notes say about X?"                        | `search`      | `notebrain search "topic" --context-window 1 --limit 3 --include-text`                 |
+| "Find the slug for a note about X" _(discovery step)_  | `search`      | `notebrain search "<query>" --jsonpath="$.results[*].note_slug"`                       |
+| "Read full note Y" _(use sparingly; prefer context)_   | `get`         | `notebrain get "<slug-or-path>"`                                                       |
+| "What links directly to this note?"                    | `backlinks`   | `notebrain backlinks "<slug>" --format json`                                           |
+| "What is structurally nearby in the graph?"            | `connections` | `notebrain connections "<slug>" --hops 2 --format tsv`                                 |
+| "What is related in meaning but NOT linked?"           | `hidden`      | `notebrain hidden "<slug>" --limit 5 --deep --format json`                             |
+| "What is related in meaning (including linked notes)?" | `hidden`      | `notebrain hidden "<slug>" --include-linked --limit 5 --format json`                   |
+| "Find concepts related to X centered around note Y"    | `boosted`     | `notebrain boosted --seed="<slug>" "query" --context-window 1 --limit 5 --format json` |
+| "Find notes with tag X"                                | `tags`        | `notebrain tags "#Tag" --format json`                                                  |
+| "Find notes with tag X and its child tags"             | `tags`        | `notebrain tags "#Tag" --children --format json`                                       |
+| "What notes share tags with X?"                        | `tags`        | `notebrain tags "<slug>" --shared --min-shared 1 --format json`                        |
 
-## JSON Output Schema
+> **Need detailed flag descriptions or output schemas?** Read [references/flags.md](references/flags.md) for full flag tables and [references/schema.md](references/schema.md) for JSON envelope fields and TSV formatting. For result filters (`--section`, `--tag`, `--has-tasks`, `--has-code`, `--min-score`, `--skip-phantom`), see the `search` table in references/flags.md.
 
-Every query command wraps results in a JSON envelope. Understanding the field specification is essential for reliable extraction:
+## Response Format
 
-| Field          | Present When                    | Description                                                                                |
-| -------------- | ------------------------------- | ------------------------------------------------------------------------------------------ |
-| `note_slug`    | Always                          | URL-safe identifier derived from the file path.                                            |
-| `title`        | Always                          | Note title from frontmatter or filename.                                                   |
-| `file_path`    | Always                          | Relative path within the vault.                                                            |
-| `score`        | Always                          | Similarity score (0–1) for search; hop count for connections.                              |
-| `chunk_index`  | Search, hidden, boosted         | Which chunk of the note matched (0-indexed).                                               |
-| `tags`         | When note has tags              | Array of tag strings.                                                                      |
-| `heading_path` | When chunk is under a heading   | Breadcrumb path like `"Section > Subsection"`.                                             |
-| `text`         | When `--include-text` is passed | The matched chunk's full markdown text, with code blocks preserved.                        |
-| `context`      | When `--context-window N` > 0   | Array of ±N adjacent chunk texts, ordered by chunk index.                                  |
-| `extra`        | Connections, tags, boosted      | Command-specific info (e.g., `"2 hop(s)"`, `"graph-boosted"`).                             |
-| `is_phantom`   | When `--skip-phantom=false`     | Boolean (`true`) if the note is an uncreated phantom link without a markdown file on disk. |
+Match the response shape to the query type:
 
----
+### Direct Questions
 
-## Retrieval Workflow (Tiered, Not Automatic)
+1. Answer the question first, in plain language.
+2. List supporting notes underneath (note title only): `**From the vault**\n- Note Title`.
+3. If the answer opens natural follow-up threads (related topics the vault covers, connections worth exploring), suggest 1–2. For simple factual lookups where the answer is self-contained, skip the follow-up — don't pad every response with questions that don't add value.
 
-To prevent excessive tool calls and context bloat, follow a progressive, conditional retrieval strategy:
+### No Relevant Results
 
-1. **Start Lean**: Always start with `search --context-window 1 --top-k 2 --include-text --limit 5`.
-2. **Check Score & Sufficiency**: Check the top result's `score`. If `score ≥ 0.75` and the returned context fully answers the question, **stop here** — do not run further commands.
-3. **Escalate Conditionally**: Only escalate if the question or initial findings require it:
-   - Ask is about **connections/related notes** → also run `connections --hops 2` (no `--include-text`; slugs/titles are enough for a graph map).
-   - Ask is about **what links here** → run `backlinks` instead of the full chain.
-   - Ask is **exploratory** ("what do I know about X") and step 1 was thin or low-score (`score < 0.75`) → run `hidden` too.
-4. **Avoid Blanket Chaining**: Never run all four commands (`search → backlinks → connections → hidden`) unless the user explicitly asks for a full comprehensive map of the topic across the entire vault.
+If `search`, `hidden`, or `boosted` returns nothing above a usable score (`score < 0.30`):
 
-### Targeted Retrieval Patterns
+- Say so plainly — don't pad the answer or overstate weak matches.
+- Suggest 1–2 reformulated queries (synonyms, broader/narrower phrasing).
+- Do not fall back to filesystem search.
 
-```bash
-# Extract top slug directly via JSONPath
-SLUG=$(notebrain search "message broker backpressure" --limit 3 --top-k 2 \
-  --context-window 1 --include-text --jsonpath="$.results[0].note_slug")
+### General Rules
 
-# Fetch complete note text for a specific hit
-notebrain get "$SLUG" --jsonpath="$.text"
-
-# Find code examples about a topic
-notebrain search "docker compose networking" --has-code --include-text
-
-# Find actionable tasks related to a project
-notebrain search "sprint planning" --has-tasks --include-text
-```
-
----
-
-## Configuration Hierarchy
-
-NoteBrain resolves settings in priority order:
-
-1. CLI command flags (`--vault-path`, `--vault-name`, `--chroma-path`, `--top-k`, `--context-window`)
-2. Configuration file (`~/.notebrain/config/config.toml` or specified via `--config`)
+- Every factual claim must trace to a retrieved `note_slug` / `text` / `context` field — never invent titles, paths, or quoted text.
+- Distinguish retrieved fact from your own inference explicitly (e.g., _"Your notes suggest..."_ vs. _"This looks like it connects to..."_).
+- Cite every note referenced in the answer, even in a short direct-question response.

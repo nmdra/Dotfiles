@@ -1,0 +1,46 @@
+{
+  "skill_name": "skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Hey, I want to create a skill for my team: it should do Go code review focused on common bugs (nil pointer dereferences, goroutine leaks, ignored errors). We use GitHub PRs, so it should work on a diff or a repo checkout. Can you set this up for me? Not sure yet how much testing we need but something lightweight is fine.",
+      "expected_output": "A go-code-review skill: SKILL.md with valid frontmatter, pushy trigger description, imperative body under 500 lines, plus an evals/evals.json with at least 2 test prompts.",
+      "files": [],
+      "expectations": [
+        "Produced a SKILL.md for the go code review skill with valid frontmatter (kebab-case name, description present)",
+        "The description is pushy: includes trigger contexts and example phrases beyond the bare task name",
+        "The SKILL.md body is under 500 lines",
+        "Instructions are imperative and lean (no 'we will' or 'the agent should' hedging)",
+        "Set up evals/evals.json inside the new skill with at least 2 test prompts",
+        "Captured user intent: asked about trigger contexts, output format, or test preferences before drafting"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a git-commit skill at ~/.agents/skills/git-commit that generates conventional-commit messages. It mostly works but sometimes the messages are too generic or it ignores the diff scope. Can you improve it? Please don't break the name or the skill path — my other tooling references them.",
+      "expected_output": "An improved git-commit skill, worked on a copy, preserving the original name, with concrete rationale for each change and passing validation.",
+      "files": [],
+      "expectations": [
+        "Preserved the original skill name (git-commit) in frontmatter and kept the skill at the original path contract",
+        "The original installed skill was not modified (work happened on a copy/snapshot)",
+        "The improved SKILL.md passes quick_validate.py",
+        "Improvements target concrete weaknesses with rationale (a change summary exists)",
+        "The improved body stays under 500 lines",
+        "Set up or updated evals for the improved skill"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My notebrain-assistant skill (~/.agents/skills/notebrain) often doesn't trigger when I ask things like 'what do I know about microservices?' — the agent just answers from memory. Can you fix the description so it triggers reliably? I don't want anything else about the skill changed.",
+      "expected_output": "Concrete improved description candidate(s) for the notebrain-assistant skill, a trigger eval query set, and a graceful handling of the environment (no claude CLI available for automated optimization).",
+      "files": [],
+      "expectations": [
+        "Did not attempt to invoke a nonexistent claude CLI or blindly run run_loop.py",
+        "Produced at least one concrete improved description candidate",
+        "Drafted trigger eval queries with should-trigger flags, including near-miss negatives",
+        "Explained the environment limitation and the chosen fallback approach",
+        "Kept changes scoped to the description (frontmatter), not the skill body"
+      ]
+    }
+  ]
+}
