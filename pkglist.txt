@@ -11,6 +11,7 @@ antigravity-cli
 appimagelauncher
 ark
 asar
+asciinema
 atool
 audacious
 autoconf
@@ -181,7 +182,7 @@ lib32-libcanberra
 lib32-libva-intel-driver
 lib32-libva-vdpau-driver
 lib32-mesa-demos
-lib32-nvidia-575xx-utils
+lib32-nvidia-580xx-utils
 libcanberra
 libdvdcss
 libinput-gestures
@@ -191,9 +192,9 @@ libvdpau-va-gl
 licenses
 linux-wifi-hotspot
 linux61
-linux61-nvidia-575xx
+linux61-nvidia-580xx
 linux66
-linux66-nvidia-575xx
+linux66-nvidia-580xx
 linux66-virtualbox-host-modules
 logrotate
 lsp-plugins
@@ -212,6 +213,7 @@ manjaro-grub-theme-blurred
 manjaro-hello
 manjaro-hotfixes
 manjaro-kde-settings
+manjaro-pacnew-checker
 manjaro-pipewire
 manjaro-release
 manjaro-settings-manager-kcm
@@ -235,6 +237,7 @@ mtpfs
 nano
 nano-syntax-highlighting
 neovim
+netbeans
 nethogs
 networkmanager
 networkmanager-l2tp
@@ -251,14 +254,15 @@ nss-mdns
 ntfs-3g
 ntp
 numlockx
-nvidia-575xx-settings
-nvidia-575xx-utils
+nvidia-580xx-settings
+nvidia-580xx-utils
 nvidia-container-toolkit
 nvidia-prime
 nvtop
 obs-studio
 okular
 ollama
+opencode-bin
 openresolv
 openssh
 optipng
@@ -312,7 +316,6 @@ qt5-networkauth
 qt5-script
 qt5-virtualkeyboard
 qt5-websockets
-rar
 rclone
 ripgrep
 ripgrep-all
@@ -321,6 +324,7 @@ rsync
 ruby
 s-nail
 samba
+scrot
 sd
 sddm
 sddm-breath-theme
@@ -335,6 +339,7 @@ spectacle
 sqlc
 squashfs-tools
 sshfs
+stacer-bin
 starship
 startup-notification
 stow
@@ -352,6 +357,7 @@ tealdeer
 telegram-desktop
 terminus-font
 terraform
+tesseract-data-eng
 tex-gyre-fonts
 texinfo
 tflint
@@ -417,7 +423,6 @@ zam-plugins-lv2
 zathura
 zathura-cb
 zathura-pdf-mupdf
-zen-browser-bin
 zip
 zlib-ng
 zoxide

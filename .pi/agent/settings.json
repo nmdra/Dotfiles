@@ -1,14 +1,13 @@
 {
-  "lastChangelogVersion": "0.80.2",
-  "defaultProvider": "z-ai",
-  "defaultModel": "glm-5.2",
+  "lastChangelogVersion": "0.83.0",
+  "defaultProvider": "openrouter",
+  "defaultModel": "inclusionai/ling-3.0-flash:free",
   "defaultThinkingLevel": "off",
   "theme": "dark",
   "npmCommand": [
     "pnpm"
   ],
   "packages": [
-    "npm:pi-web-access",
-    "npm:pi-subagents"
+    "npm:pi-web-access"
   ]
 }
