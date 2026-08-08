@@ -41,6 +41,15 @@ rsync -r --delete ~/.config/mpv/ "$DOTFILES/mpv/"
 rsync ~/.config/tmux/tmux.conf "$DOTFILES/tmux/"
 rsync -r --delete ~/.config/neofetch/ "$DOTFILES/neofetch/"
 
+# ─── Agent Skills & Workflows ────────────────────────────────────────────────
+
+rsync -r --delete ~/.agents/skills/ "$DOTFILES/.agents/skills/"
+rsync -r --delete ~/.agents/rules/ "$DOTFILES/.agents/rules/"
+rsync -r --delete ~/.agents/workflows/ "$DOTFILES/.agents/workflows/"
+rsync -r --delete ~/.pi/agent/skills/ "$DOTFILES/.pi/agent/skills/"
+rsync ~/.pi/agent/settings.json "$DOTFILES/.pi/agent/settings.json"
+echo "✓ Agent skills synced"
+
 # ─── Desktop Environment ─────────────────────────────────────────────────────
 
 rsync ~/.config/kglobalshortcutsrc "$DOTFILES/kde/Shortcuts.kksrc"

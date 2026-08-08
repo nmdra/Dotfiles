@@ -1,62 +1,96 @@
 ---
 name: keep-a-changelog
-description: Add a new version entry to CHANGELOG.md, or restructure the entire file, following the Keep a Changelog format and Semantic Versioning.
+description: Maintain CHANGELOG.md — add new version entries, keep the Unreleased section, cut a release, or restructure the whole file — following the Keep a Changelog format and Semantic Versioning.
 ---
 
 # Keep a Changelog
 
-Use this skill when the user wants to add a new version entry to a `CHANGELOG.md`, or restructure the entire changelog file following the Keep a Changelog format and Semantic Versioning guidelines.
+Use this skill when the user wants to add a new version entry to a `CHANGELOG.md`, maintain the `Unreleased` section, cut a release, or restructure the changelog following the [Keep a Changelog](https://keepachangelog.com/en/2.0.0/) format and Semantic Versioning.
 
-## Workflow — New Version Entry
+## Principles
 
-1. **Read `CHANGELOG.md`** to identify the last released version and its date.
-2. **Find recent commits:** Run `git log --oneline <last-tag>..HEAD` to list all commits since that tag. If no tag exists for the last version, use `git log --oneline` and filter manually.
-3. **Get today's date:** Run `date +%Y-%m-%d` to get today's release date — never hardcode or guess it.
-4. **Determine the new version number** (ask the user if not specified):
-   - **MAJOR bump:** Breaking changes or major redesign.
-   - **MINOR bump:** New features, backward-compatible.
-   - **PATCH bump:** Bug fixes only.
-5. **Group commits** into Keep a Changelog sections (see Section rules below).
-6. **Prepend the new version block** immediately after the file header (before the previous latest version).
-7. **Do NOT** remove or alter any existing version entries.
+- Changelogs are **for humans**, not machines. They are *curated*: record **notable, user-facing** changes only — a changelog is not a commit log.
+- Machines can draft; humans curate. When generating from commits, summarize from the reader's point of view; never paste `git log` output.
+- List the latest version first. Show the release date (`YYYY-MM-DD`). Write plainly — many readers are not native speakers.
+- **Never guess dates** — always retrieve the current date programmatically (`date +%Y-%m-%d`).
 
-## Workflow — Restructure Entire CHANGELOG.md
+## Structure
 
-1. **Read the full `CHANGELOG.md`** and note all existing version blocks.
-2. **Rewrite the file** preserving all versions and dates but enforcing:
-   - Correct header and intro paragraph (see File header below).
-   - Consistent section names and ordering.
-   - Bullet style: start each item with a capital letter, no trailing period.
-3. **Get today's date:** Run `date +%Y-%m-%d` and confirm the latest version date is still accurate.
+### File header
 
-## File Header
+Pin the link to the spec version the file follows (2.0.0 unless the repo pins an older one):
 
 ```markdown
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ```
 
-## Version Block Format
+### Unreleased section (top of file)
 
 ```markdown
-## [X.Y.Z] - YYYY-MM-DD
+## [Unreleased]
 ### Added
 - ...
+```
 
-### Changed
+### Version blocks and comparison links (bottom of file)
+
+```markdown
+## [1.1.0] - 2025-06-01
+### Added
 - ...
-
 ### Fixed
 - ...
+
+[Unreleased]: https://github.com/owner/repo/compare/v1.0.0...HEAD
+[1.1.0]: https://github.com/owner/repo/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/owner/repo/releases/tag/v1.0.0
 ```
-*Omit any section that has no entries. Do not add empty sections.*
+
+`[Unreleased]` compares the latest tag to `HEAD`; each version links to the diff vs the one before it; the **oldest** version links to its tag (nothing earlier to compare). Keep the link out of the heading so the file reads cleanly.
+
+---
+
+## Workflow — Maintain Unreleased
+
+As notable changes land, append them to `## [Unreleased]` under the right section. This is the default ongoing workflow.
+
+## Workflow — Cut a Release
+
+1. Confirm the new version with the user (or determine from the spec):
+   - **MAJOR:** breaking changes
+   - **MINOR:** new features, backward-compatible
+   - **PATCH:** bug fixes only
+2. Rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD` (heading **and** its link at the bottom).
+3. Change the `[Unreleased]` link to compare the new tag against `HEAD`; add the new version's comparison link.
+4. Add a fresh, empty `## [Unreleased]` section pointing at `HEAD`.
+5. Get the date via `date +%Y-%m-%d` — never hardcode.
+
+## Workflow — New Version Entry (no Unreleased section / backfill)
+
+1. Read `CHANGELOG.md` to identify the last released version and its date.
+2. Find commits since then: `git log --oneline <last-tag>..HEAD`. If no tag exists for the last version, use `git log --oneline` and filter manually.
+3. Get today's date programmatically.
+4. Determine the new version number (ask the user if not specified).
+5. Group commits into Keep a Changelog sections (see mapping below), **curating**: fold several commits into one reader-facing entry where they form one change.
+6. Prepend the new version block after the file header.
+7. Add/update the comparison links at the bottom.
+8. **Do NOT** remove or alter any existing version entries.
+
+## Workflow — Restructure Entire CHANGELOG.md
+
+1. Read the full file; note all version blocks and their dates.
+2. Rewrite, preserving every version and date, enforcing: correct header, `Unreleased` section, consistent section names/order, comparison links at the bottom, consistent bullet style (capital letter, no trailing period).
+3. Confirm dates via `date +%Y-%m-%d` where a version claims today.
+
+---
 
 ## Section Rules
 
-Use only these standard Keep a Changelog section names, in this order when multiple sections are present:
+Use only these six sections, in this order when multiple are present. **Omit any empty section.**
 
 | Section | When to use |
 | :--- | :--- |
@@ -67,17 +101,48 @@ Use only these standard Keep a Changelog section names, in this order when multi
 | **Fixed** | Bug fixes |
 | **Security** | Security-related fixes or improvements |
 
+**Fixed vs Changed — the decision rule:** was the old behavior a *bug*? If yes → `Fixed`. If it was intentional and you changed it → `Changed`.
+
+**Dependencies are not a type of change.** A dependency update can be harmless, a fix, or breaking — describe its effect under the right type, or leave it out.
+
+**Breaking changes** — mark with `**Breaking:**` at the start of the entry, *inside* its type (usually `Changed` or `Removed`), never a separate section:
+
+```markdown
+### Changed
+- **Breaking:** `parse()` now returns a result object instead of raising.
+- Rename the `color` option to `theme`.
+```
+
+**CVEs** — lead the entry with the CVE ID so readers and tools can match it:
+
+```markdown
+### Security
+- CVE-2024-12345: out-of-bounds read when parsing malformed input.
+```
+
+**Deprecate before removing** — mark `Deprecated` in one release, `Removed` in a later one, and say which version will remove it.
+
+**Yanked releases** — list, don't hide: `## [0.0.5] - 2014-12-13 [YANKED]`.
+
+---
+
 ## Commit → Section Mapping Heuristics
 
-- `feat:` / `add` / `new` → **Added**
-- `refactor:` / `change` / `rename` / `move` / `update` / `improve` → **Changed**
-- `fix:` / `bug` / `patch` → **Fixed**
-- `remove:` / `delete` / `drop` → **Removed**
-- `deprecate:` → **Deprecated**
-- `security:` / `cve` / `vuln` → **Security**
-- `docs:` / `chore:` / `ci:` / `test:` → *Omit unless user-facing.*
+This mapping assumes Conventional Commits messages produced by the `git-commiter` skill.
 
-*When a commit message is ambiguous, infer intent from the diff or file name.*
+| Commit | Section |
+| :--- | :--- |
+| `feat:` / `add` / `new` | **Added** |
+| `refactor:` / `change` / `rename` / `move` / `update` / `improve` | **Changed** |
+| `fix:` / `bug` / `patch` | **Fixed** |
+| `remove:` / `delete` / `drop` | **Removed** |
+| `deprecate:` | **Deprecated** |
+| `security:` / `cve` / `vuln` | **Security** |
+| `docs:` / `chore:` / `ci:` / `test:` | *Omit unless user-facing* |
+
+*When a commit is ambiguous, infer intent from the diff or file name. Remember: several commits often collapse into one entry — write for the reader, not the history.*
+
+---
 
 ## Style Rules
 
@@ -86,3 +151,4 @@ Use only these standard Keep a Changelog section names, in this order when multi
 - Keep bullets concise — one line per entry where possible.
 - Wrap code identifiers, file paths, and module names in backticks.
 - Never guess dates — always retrieve the current date programmatically.
+- When in doubt about plain wording, follow the `simple-english` skill.
