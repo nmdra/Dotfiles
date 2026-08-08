@@ -41,14 +41,23 @@ rsync -r --delete ~/.config/mpv/ "$DOTFILES/mpv/"
 rsync ~/.config/tmux/tmux.conf "$DOTFILES/tmux/"
 rsync -r --delete ~/.config/neofetch/ "$DOTFILES/neofetch/"
 
-# ─── Agent Skills & Workflows ────────────────────────────────────────────────
+# ─── Agent Skills, Workflows & Pi Config ─────────────────────────────────────
+# Secrets/runtime never synced: auth.json, models-store.json, sessions/,
+# run-history.jsonl, usage-extension-cache.json, npm/
 
 rsync -r --delete ~/.agents/skills/ "$DOTFILES/.agents/skills/"
 rsync -r --delete ~/.agents/rules/ "$DOTFILES/.agents/rules/"
 rsync -r --delete ~/.agents/workflows/ "$DOTFILES/.agents/workflows/"
 rsync -r --delete ~/.pi/agent/skills/ "$DOTFILES/.pi/agent/skills/"
+rsync -r --delete ~/.pi/agent/agents/ "$DOTFILES/.pi/agent/agents/"
+rsync -r --delete ~/.pi/agent/prompts/ "$DOTFILES/.pi/agent/prompts/"
+rsync -r --delete ~/.pi/agent/extensions/ "$DOTFILES/.pi/agent/extensions/" --exclude pi-permission-system
 rsync ~/.pi/agent/settings.json "$DOTFILES/.pi/agent/settings.json"
-echo "✓ Agent skills synced"
+rsync ~/.pi/agent/APPEND_SYSTEM.md "$DOTFILES/.pi/agent/APPEND_SYSTEM.md"
+rsync ~/.pi/agent/subagents.json "$DOTFILES/.pi/agent/subagents.json"
+rsync ~/.pi/agent/trust.json "$DOTFILES/.pi/agent/trust.json"
+rsync ~/.pi/agent/web-search.json "$DOTFILES/.pi/agent/web-search.json"
+echo "✓ Agent skills and pi config synced"
 
 # ─── Desktop Environment ─────────────────────────────────────────────────────
 

@@ -1,0 +1,7 @@
+{
+  "provider": "exa",
+  "allowBrowserCookies": false,
+  "summaryModel": "opencode/deepseek-v4-flash-free",
+  "workflow": "none",
+  "curatorTimeoutSeconds": 20
+}
