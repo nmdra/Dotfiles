@@ -1,21 +1,26 @@
 {
-  "lastChangelogVersion": "0.83.0",
+  "lastChangelogVersion": "0.84.1",
   "defaultProvider": "opencode",
   "defaultModel": "deepseek-v4-flash-free",
   "defaultThinkingLevel": "max",
   "theme": "dark",
+  "tuiMode": "regular",
+  "fullscreenScrollbar": "auto",
+  "markdown": {
+    "mermaid": "streaming"
+  },
   "quietStartup": true,
   "collapseChangelog": true,
   "npmCommand": [
     "pnpm"
   ],
   "packages": [
-    "npm:pi-web-access",
     "npm:@tmustier/pi-usage-extension",
     "npm:pi-lens",
     "npm:@gotgenes/pi-permission-system",
     "npm:@gotgenes/pi-subagents",
-    "../../Documents/Projects/pi-vision-proxy"
+    "git:github.com/nmdra/pi-vision-proxy",
+    "npm:pi-web-access"
   ],
   "showCacheMissNotices": true,
   "terminal": {

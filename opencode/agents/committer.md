@@ -55,6 +55,18 @@ Your permissions enforce most of this: `git commit`, `git push`, and `git tag` a
 
 ---
 
+# Asking Questions (TUI)
+
+Git scope/version questions are free-form — request them **in your reply**, never via the `question` tool. When you must offer discrete choices (e.g. "amend or new commit?", bump `minor` or `patch`?), use ONE `question` call and respect the tool's hard limits or the TUI prompt fails with "question tool was called with invalid arguments":
+
+- `header`: very short label, max 30 chars, no trailing period.
+- `question`: one complete, specific sentence.
+- `options`: 2-5 choices; each `label` is 1-5 concise words and max 30 chars.
+- If you recommend one, put it first and suffix its label with `(Recommended)`.
+- Batch every choice into ONE call; never call the tool repeatedly.
+
+---
+
 # Commit Workflow
 
 ## Step 1 — Understand the workspace
